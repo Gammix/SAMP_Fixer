@@ -5,7 +5,7 @@ Community patch for buggy SA:MP functions and glitches experienced in game.
 Latest SA-MP update only: http://forum.sa-mp.com/showthread.php?t=581259
 
 ## Visit the thread
-`posting thread`
+http://forum.sa-mp.com/showthread.php?t=591458
 
 ## Library structure
 There are 12 branches of this librarby:
@@ -45,7 +45,7 @@ Example:
 
 The samp_fixer.inc also have a game mode initiation phase where the include setups `fix_server` for default changes.
 
-If you are using individual includes and not including samp_fixer, you have to add these under [B]OnGameModeInit[/B] in case you don't want your mod's default features.
+If you are using individual includes and not including samp_fixer, you have to add these under `OnGameModeInit` in case you don't want your mod's default features.
 ```pawn
 public OnGameModeInit()
 {
