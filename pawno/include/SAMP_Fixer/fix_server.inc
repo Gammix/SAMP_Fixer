@@ -1,7 +1,7 @@
-#if defined _fix_S_included
+#if defined _fix_server_included
 	#endinput
 #endif
-#define _fix_S_included
+#define _fix_server_included
 #pragma library fix_server
 
 /*
@@ -517,7 +517,7 @@ stock FIX_GetWeaponName(weaponid, weapon[], len)
         }
         default:
 		{
-			return GetWeaponName(weaponid, weapon, len)
+			return GetWeaponName(weaponid, weapon, len);
         }
 	}
 
