@@ -198,9 +198,9 @@ stock ATT_SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX
 		SetPVarFloat(playerid, buf, fScaleZ);
 
 		format(buf, sizeof(buf), "att%_color_1", index);
-		SetPVarInt(playerid, buf, color1);
+		SetPVarInt(playerid, buf, materialcolor1);
 		format(buf, sizeof(buf), "att%_color_2", index);
-		SetPVarInt(playerid, buf, color2);
+		SetPVarInt(playerid, buf, materialcolor2);
 
 		format(buf, sizeof(buf), "att%_used", index);
 		SetPVarInt(playerid, buf, 1);
