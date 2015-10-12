@@ -49,7 +49,7 @@ stock FIX_GangZoneDestroy(zone)
 	new
 		buf[40]
 	;
-	format(buf, sizeof(buf), "gz_%i", ret);
+	format(buf, sizeof(buf), "gz_%i", zone);
 	DeleteSVar(buf);
 
 	return GangZoneDestroy(zone);
