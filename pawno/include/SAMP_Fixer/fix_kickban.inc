@@ -33,7 +33,7 @@ enum e_KICKBAN_DATA
 {
 	kbTimer,
 	kbType,
-	kbReason
+	kbReason[150]
 };
 
 static
