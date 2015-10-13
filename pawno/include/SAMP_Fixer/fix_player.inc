@@ -15,6 +15,10 @@
  *  LIST OF FIXES:
  * ================
  *
+ * FIX:			GetPlayerIp
+ * PROBLEM:  	Don't work in OnPlayerDisconnect.
+ * SOLUTION:  	Store player ip. under OnPlayerConnect.
+ *
  * FIX:			GetPlayerColor
  * PROBLEM:  	Returns an invalid value when used before SetPlayerColor.
  * SOLUTION:  	Set player random color under OnPlayerConnect.
@@ -71,6 +75,10 @@
  * INFO:  		Read the player's skill level of a weapon.
  *
  */
+ 
+static
+	t_PlayerIP[MAX_PLAYERS][18]
+;
 
 public OnPlayerConnect(playerid)
 {
@@ -108,6 +116,8 @@ public OnPlayerConnect(playerid)
 		SetPVarInt(playerid, buf, 1000);
 	}
 
+	GetPlayerIp(playerid, t_PlayerIP[playerid], 18);
+
     #if defined PLAYER_OnPlayerConnect
 		return PLAYER_OnPlayerConnect(playerid);
 	#else
@@ -143,6 +153,19 @@ public OnPlayerSpawn(playerid)
 #if defined PLAYER_OnPlayerSpawn
 	forward PLAYER_OnPlayerSpawn(playerid);
 #endif
+
+stock FIX_GetPlayerIp(playerid, name[], len)
+{
+	name[0] = EOS;
+	return strcat(name, t_PlayerIP[playerid], len);
+}
+#if defined _ALS_GetPlayerIp
+	#undef GetPlayerIp
+#else
+	native BAD_GetPlayerIp(playerid, name[], len) = GetPlayerIp;
+	#define _ALS_GetPlayerIp
+#endif
+#define GetPlayerIp FIX_GetPlayerIp
 
 stock FIX_TogglePlayerSpectating(playerid, set)
 {
