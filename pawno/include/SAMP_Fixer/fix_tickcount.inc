@@ -8,6 +8,12 @@
 
 */
 
+#if defined _fix_tickcount_included
+	#endinput
+#endif
+#define _fix_tickcount_included
+#pragma library fix_tickcount
+
 // Fix GetTickCount
 stock _HOOKED_GetTickCount()
 {

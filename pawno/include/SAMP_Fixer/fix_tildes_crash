@@ -4,6 +4,12 @@
 		Basically, this script counts how many tildes are in a text, and checks if it's an odd number, then there's something wrong!
 */
 
+#if defined _fix_tildes_crash_included
+	#endinput
+#endif
+#define _fix_tildes_crash_included
+#pragma library fix_tildes_crash
+
 // Checks whether an integer is even
 IsEven(integer)
 {
