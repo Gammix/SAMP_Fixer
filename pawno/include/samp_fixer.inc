@@ -24,6 +24,7 @@
  * fix_string [IMPORTANT]
  * fix_vehicles [IMPORTANT]
  * fix_tickcount
+ * fix_tildes_crash
  *
  * ============
  * 	AUTHOR
@@ -59,6 +60,7 @@
 #include "SAMP_Fixer/fix_string"
 #include "SAMP_Fixer/fix_vehicles"
 #include "SAMP_Fixer/fix_tickcount"
+#include "SAMP_Fixer/fix_tildes_crash"
 
 public OnGameModeInit()
 {
