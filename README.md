@@ -8,7 +8,7 @@ Latest SA-MP update only: http://forum.sa-mp.com/showthread.php?t=581259
 http://forum.sa-mp.com/showthread.php?t=591458
 
 ## Library structure
-There are 12 branches of this librarby:
+There are 14 branches of this library:
  * fix_anims [IMPORTANT]
  * fix_attachments [IMPORTANT]
  * fix_checkpoint
@@ -21,6 +21,8 @@ There are 12 branches of this librarby:
  * fix_server
  * fix_string [IMPORTANT]
  * fix_vehicles [IMPORTANT]
+ * fix_tickcount
+ * fix_tildes_crash
 
 ## Why to use this?
 There are few reasons why fixes is insecure or not that good to use, firstly there is silent kick which can be causing trouble (as far i have experienced), the include sometimes causes random kicks or crashes. Secondly there are few better methods to perform or fix some natives, the code has completely ran into complexity. The SAMP Fixer library has few more areas which fixes.inc doesn't cover. And last but not the least, the timer fix plugin (fixes plugin) is still buggy. I have experienced time difference till yet.
