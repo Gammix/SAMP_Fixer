@@ -15,8 +15,11 @@
  *  LIST OF FIXES:
  * ================
  *
- * ADD:			PLAYER_STATE_PAUSED
- * INFO:  		Return PLAYER_STATE_PAUSED in GetPlayerState when player is in pause menu.
+ * ADD:   		IsPlayerPaused(playerid);
+ * INFO:  		Return 1 if the player is in pause menu or 0 if not.
+ *
+ * ADD:   		OnPlayerPause(playerid) / OnPlayerUnpause(playerid)
+ * INFO:  		called when a player goes or returns to paused state.
  *
  * ADD:			GetPlayerPausedTime(playerid);
  * INFO:  		Get player pause interval in seconds.
@@ -143,11 +146,11 @@ public  PAUSE_OnPlayerTimeUpdate(playerid)
     {
         if (gettime() - t_PlayerPaused[playerid][pauseLastTime] > 1)
 		{
-        	CallRemoteFunction("OnPlayerStateChange", "iii", playerid, PLAYER_STATE_PAUSED, GetPlayerState(playerid));
+        	CallRemoteFunction("OnPlayerPause", "i", playerid);
 
 			KillTimer(t_PlayerPaused[playerid][pauseTimer]);
 			t_PlayerPaused[playerid][pauseTimer] = -1;
-				
+
 			SetPVarInt(playerid, "PlayerPaused", 1);
 		}
     }
@@ -159,10 +162,10 @@ public OnPlayerUpdate(playerid)
 	{
 	    if (GetPVarType(playerid, "PlayerPaused") != PLAYER_VARTYPE_NONE)
 		{
-	        CallRemoteFunction("OnPlayerStateChange", "iii", playerid, GetPlayerState(playerid), PLAYER_STATE_PAUSED);
+	        CallRemoteFunction("OnPlayerUnpause", "i", playerid);
 
 	    	t_PlayerPaused[playerid][pauseTimer] = SetTimerEx("PAUSE_OnPlayerTimeUpdate", 1000, true, "i", playerid);
-	    	
+
 			DeletePVar(playerid, "PlayerPaused");
 	    }
 	    else
@@ -187,22 +190,15 @@ public OnPlayerUpdate(playerid)
 	forward PAUSE_OnPlayerUpdate(playerid);
 #endif
 
-stock PAUSE_GetPlayerState(playerid)
+stock IsPlayerPaused(playerid)
 {
 	if (GetPVarType(playerid, "PlayerPaused") != PLAYER_VARTYPE_NONE)
 	{
-	    return PLAYER_STATE_PAUSED;
+	    return true;
 	}
 
-	return GetPlayerState(playerid);
+	return false;
 }
-#if defined _ALS_GetPlayerState
-	#undef GetPlayerState
-#else
-	native BAD_GetPlayerState(playerid) = GetPlayerState;
-	#define _ALS_GetPlayerState
-#endif
-#define GetPlayerState PAUSE_GetPlayerState
 
 stock GetPlayerPausedTime(playerid)
 {
