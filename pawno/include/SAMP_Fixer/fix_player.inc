@@ -401,7 +401,7 @@ stock RemovePlayerWeapon(playerid, weaponid)
 		}
 	}
 
-	return false
+	return false;
 }
 
 stock GetPlayerWeaponAmmo(playerid, weaponid)
