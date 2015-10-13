@@ -23,6 +23,7 @@
  * fix_server
  * fix_string [IMPORTANT]
  * fix_vehicles [IMPORTANT]
+ * fix_tickcount
  *
  * ============
  * 	AUTHOR
@@ -57,6 +58,7 @@
 #include "SAMP_Fixer/fix_server"
 #include "SAMP_Fixer/fix_string"
 #include "SAMP_Fixer/fix_vehicles"
+#include "SAMP_Fixer/fix_tickcount"
 
 public OnGameModeInit()
 {
