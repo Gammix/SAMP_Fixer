@@ -23,7 +23,7 @@ IsSafeGametext(text[])
 		if(text[i] == '~')
 			cnt ++;
 	}
-	if(IsEven(cnt) == 0)
+	if(!IsEven(cnt))
 		return 0;
 	return 1;
 }
