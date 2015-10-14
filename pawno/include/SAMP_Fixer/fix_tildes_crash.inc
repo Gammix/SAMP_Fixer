@@ -10,13 +10,9 @@
 #define _fix_tildes_crash_included
 #pragma library fix_tildes_crash
 
-// Checks whether an integer is even
-IsEven(integer)
-{
-	if(integer % 2 == 0)
-		 return 1; // even
-	return 0; // odd
-}
+// Checks whether an integer is even or odd
+#define IsOdd(%0) ((%0)&1)
+#define IsEven(%0) (!IsOdd(%0))
 
 // Checks whether a text is safe or might crash clients.
 IsSafeGametext(text[])
