@@ -152,8 +152,10 @@ public OnPlayerDisconnect(playerid, reason)
 	if (t_DelayKB[playerid][kbTimer] != -1)
 	{
 		KillTimer(t_DelayKB[playerid][kbTimer]);
+		t_DelayKB[playerid][kbTimer] = -1;
+		
+		OnPlayerDelayKicked(playerid);
 	}
-	OnPlayerDelayKicked(playerid);
 
 	#if defined KB_OnPlayerDisconnect
 		return KB_OnPlayerDisconnect(playerid, reason);
