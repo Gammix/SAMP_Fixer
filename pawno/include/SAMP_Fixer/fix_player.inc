@@ -75,7 +75,7 @@
  * INFO:  		Read the player's skill level of a weapon.
  *
  */
- 
+
 static
 	t_PlayerIP[MAX_PLAYERS][18]
 ;
@@ -222,7 +222,7 @@ stock FIX_TogglePlayerControllable(playerid, toggle)
 {
 	if (! toggle)
 	{
-		ClearAnimations(playerid, 1);
+		BAD_ClearAnimations(playerid, 1);
 	}
 
 	return TogglePlayerControllable(playerid, false);
@@ -361,7 +361,7 @@ stock FIX_SetPlayerSpecialAction(playerid, actionid)
 {
 	if (actionid == SPECIAL_ACTION_USEJETPACK)
 	{
-		ClearAnimations(playerid, 1);
+		BAD_ClearAnimations(playerid, 1);
 	}
 
 	return SetPlayerSpecialAction(playerid, actionid);
