@@ -439,7 +439,7 @@ stock FIX_SetPlayerSkillLevel(playerid, skill, level)
 	native BAD_SetPlayerSkillLevel(playerid, skill, level) = SetPlayerSkillLevel;
 	#define _ALS_SetPlayerSkillLevel
 #endif
-#define SetPlayerSkillLevel FUNC_SetPlayerSkillLevel
+#define SetPlayerSkillLevel FIX_SetPlayerSkillLevel
 
 stock GetPlayerSkillLevel(playerid, skill)
 {
