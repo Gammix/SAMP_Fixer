@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_vehicles_included
-#pragma library fix_vehicles
 
 /*
  * ===============
@@ -54,6 +53,9 @@ enum e_GBUG_DATA
 };
 
 static
+	#if defined SAMP_FIXER_SINGLES
+	        t_VehicleData[MAX_VEHICLES][4],
+	#endif
 	bool:	t_OnPlayerUpdate,
 			t_PlayerGBug[MAX_PLAYERS][e_GBUG_DATA]
 ;
@@ -546,20 +548,29 @@ stock VEH_CreateVehicle(modelid, Float:x, Float:y, Float:z, Float:rotation, colo
 	    return INVALID_VEHICLE_ID;
 	}
 
-	new
-	    buf[40]
-	;
-	format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
-	SetSVarInt(buf, 0);
+	#if defined SAMP_FIXER_SINGLES
+        t_VehicleData[vehicleid][0] = 0;
 
-	format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
-	SetSVarInt(buf, color1);
-	format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
-	SetSVarInt(buf, color2);
+        t_VehicleData[vehicleid][1] = color1;
+        t_VehicleData[vehicleid][2] = color2;
+        
+        t_VehicleData[vehicleid][4] = 3;
+	#else
+		new
+		    buf[40]
+		;
+		format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
+		SetSVarInt(buf, 0);
 
-	format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
-	SetSVarInt(buf, 3);
+		format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
+		SetSVarInt(buf, color1);
+		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
+		SetSVarInt(buf, color2);
 
+		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
+		SetSVarInt(buf, 3);
+	#endif
+	
 	return vehicleid;
 }
 #if defined _ALS_CreateVehicle
@@ -593,19 +604,21 @@ stock VEH_DestroyVehicle(vehicleid)
 	;
 	if (ret)
 	{
-		new
-		    buf[40]
-		;
-		format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
-		DeleteSVar(buf);
+		#if ! defined SAMP_FIXER_SINGLES
+			new
+			    buf[40]
+			;
+			format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
+			DeleteSVar(buf);
 
-		format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
-		DeleteSVar(buf);
-		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
-		DeleteSVar(buf);
+			format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
+			DeleteSVar(buf);
+			format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
+			DeleteSVar(buf);
 
-		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
-		DeleteSVar(buf);
+			format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
+			DeleteSVar(buf);
+		#endif
 	}
 
 	return ret;
@@ -624,11 +637,15 @@ stock VEH_LinkVehicleToInterior(vehicleid, interiorid)
 	;
 	if (ret)
 	{
-		new
-		    buf[40]
-		;
-		format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
-		SetSVarInt(buf, interiorid);
+		#if defined SAMP_FIXER_SINGLES
+        	t_VehicleData[vehicleid][0] = interiorid;
+		#else
+			new
+			    buf[40]
+			;
+			format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
+			SetSVarInt(buf, interiorid);
+		#endif
 	}
 
 	return ret;
@@ -643,11 +660,15 @@ stock VEH_LinkVehicleToInterior(vehicleid, interiorid)
 
 stock GetVehicleInterior(vehicleid)
 {
-    new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
-	return GetSVarInt(buf);
+	#if defined SAMP_FIXER_SINGLES
+		return t_VehicleData[vehicleid][0];
+	#else
+	    new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "vehicle%i_interiorid", vehicleid);
+		return GetSVarInt(buf);
+	#endif
 }
 
 stock VEH_ChangeVehicleColor(vehicleid, color1, color2)
@@ -679,13 +700,18 @@ stock VEH_ChangeVehicleColor(vehicleid, color1, color2)
 	;
 	if (ret)
 	{
-		new
-		    buf[40]
-		;
-		format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
-		SetSVarInt(buf, color1);
-		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
-		SetSVarInt(buf, color2);
+		#if defined SAMP_FIXER_SINGLES
+	        t_VehicleData[vehicleid][1] = color1;
+	        t_VehicleData[vehicleid][2] = color2;
+		#else
+			new
+			    buf[40]
+			;
+			format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
+			SetSVarInt(buf, color1);
+			format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
+			SetSVarInt(buf, color2);
+		#endif
 	}
 
 	return ret;
@@ -700,14 +726,19 @@ stock VEH_ChangeVehicleColor(vehicleid, color1, color2)
 
 stock GetVehicleColor(vehicleid, &color1, &color2)
 {
-    new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
-	color1 = GetSVarInt(buf);
-	format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
-	color2 = GetSVarInt(buf);
-
+	#if defined SAMP_FIXER_SINGLES
+ 		color1 = t_VehicleData[vehicleid][1];
+   		color2 = t_VehicleData[vehicleid][2];
+    #else
+		new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
+		color1 = GetSVarInt(buf);
+		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
+		color2 = GetSVarInt(buf);
+	#endif
+	
 	return true;
 }
 
@@ -718,11 +749,15 @@ stock VEH_ChangeVehiclePaintjob(vehicleid, paintjobid)
 	;
 	if(ret)
 	{
-	    new
-			buf[40]
-		;
-		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
-		SetSVarInt(buf, paintjobid);
+		#if defined SAMP_FIXER_SINGLES
+   			t_VehicleData[vehicleid][3] = paintjobid;
+		#else
+		    new
+				buf[40]
+			;
+			format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
+			SetSVarInt(buf, paintjobid);
+		#endif
 
 		if (paintjobid == 3)
 		{
@@ -746,11 +781,15 @@ stock VEH_ChangeVehiclePaintjob(vehicleid, paintjobid)
 
 stock GetVehiclePaintjob(vehicleid)
 {
-    new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
-	return GetSVarInt(buf);
+	#if defined SAMP_FIXER_SINGLES
+	    return t_VehicleData[vehicleid][3];
+    #else
+		new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
+		return GetSVarInt(buf);
+	#endif
 }
 
 stock VEH_PutPlayerInVehicle(playerid, vehicleid, seatid)
@@ -939,12 +978,16 @@ public OnPlayerUpdate(playerid)
 
 public OnVehiclePaintjob(playerid, vehicleid, paintjobid)
 {
-    new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
-	SetSVarInt(buf, paintjobid);
-
+	#if defined SAMP_FIXER_SINGLES
+	    t_VehicleData[vehicleid][3] = paintjobid;
+    #else
+		new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
+		SetSVarInt(buf, paintjobid);
+	#endif
+	
     #if defined VEH_OnVehiclePaintjob
         return VEH_OnVehiclePaintjob(playerid, vehicleid, paintjobid);
     #else
@@ -963,17 +1006,12 @@ public OnVehiclePaintjob(playerid, vehicleid, paintjobid)
 
 public OnVehicleSpawn(vehicleid)
 {
-    new
-		buf[40],
+	ChangeVehiclePaintjob(vehicleid, GetVehiclePaintjob(vehicleid));
+
+	new
 		color[2]
 	;
-	format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
-	ChangeVehiclePaintjob(vehicleid, GetSVarInt(buf));
-
-	format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
-	color[0] = GetSVarInt(buf);
-	format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
-	color[0] = GetSVarInt(buf);
+	GetVehicleColor(vehicleid, color[0], color[1]);
 	ChangeVehicleColor(vehicleid, color[0], color[1]);
 
     #if defined VEH_OnVehicleSpawn
@@ -994,14 +1032,19 @@ public OnVehicleSpawn(vehicleid)
 
 public OnVehicleRespray(playerid, vehicleid, color1, color2)
 {
-    new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
-	SetSVarInt(buf, color1);
-	format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
-	SetSVarInt(buf, color2);
-
+	#if defined SAMP_FIXER_SINGLES
+	    t_VehicleData[vehicleid][1] = color1;
+	    t_VehicleData[vehicleid][2] = color2;
+    #else
+	    new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "vehicle%i_color1", vehicleid);
+		SetSVarInt(buf, color1);
+		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
+		SetSVarInt(buf, color2);
+	#endif
+	
     #if defined VEH_OnVehicleRespray
         return VEH_OnVehicleRespray(playerid, vehicleid, color1, color2);
     #else
