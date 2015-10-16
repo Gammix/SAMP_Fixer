@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_gametext_included
-#pragma library fix_gametext
 
 /*
  * ===============
@@ -64,14 +63,14 @@ stock FIX_GameTextForPlayer(playerid, string[], time, style, color = -1)
 		KillTimer(t_GameText[playerid][style][gametextTimer]);
 	}
 
-	t_GameText[playerid][style][gametextColor] = color;
-	t_GameText[playerid][style][gametextFadeLevel] = 0;
-	t_GameText[playerid][style][gametextExpireTime] = time;
-
 	if (color == -1)
 	{
 	    color = t_GameTextDefaultColor[style];
 	}
+
+	t_GameText[playerid][style][gametextColor] = color;
+	t_GameText[playerid][style][gametextFadeLevel] = 0;
+	t_GameText[playerid][style][gametextExpireTime] = time;
 
 	PlayerTextDrawColor(playerid, t_GameText[playerid][style][gametextTD], _setaplha(color, 0));
 	PlayerTextDrawSetString(playerid, t_GameText[playerid][style][gametextTD], string);
@@ -253,7 +252,6 @@ public OnPlayerDisconnect(playerid, reason)
 		    KillTimer(t_GameText[playerid][i][gametextTimer]);
 		    t_GameText[playerid][i][gametextTimer] = -1;
 		}
-		t_GameText[playerid][i][gametextTD] = PlayerText:INVALID_TEXT_DRAW;
 	}
 
 	#if defined GT_OnPlayerDisconnect
