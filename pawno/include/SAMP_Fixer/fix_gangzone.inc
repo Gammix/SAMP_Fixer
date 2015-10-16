@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_gangzone_included
-#pragma library fix_gangzone
 
 /*
  * ===============
@@ -24,6 +23,12 @@
  *
  */
 
+#if defined SAMP_FIXER_SINGLES
+	static
+		bool:t_IsValidGangZone[MAX_GANG_ZONES]
+	;
+#endif
+
 stock FIX_GangZoneCreate(Float:minx, Float:miny, Float:maxx, Float:maxy)
 {
 	new
@@ -31,9 +36,13 @@ stock FIX_GangZoneCreate(Float:minx, Float:miny, Float:maxx, Float:maxy)
 		buf[40]
 	;
 
-	format(buf, sizeof(buf), "gz_%i", ret);
-	SetSVarInt(buf, 1);
-
+	#if defined SAMP_FIXER_SINGLES
+	    t_IsValidGangZone[ret] = true;
+	#else
+		format(buf, sizeof(buf), "gz_%i", ret);
+		SetSVarInt(buf, 1);
+	#endif
+	
 	return ret;
 }
 #if defined _ALS_GangZoneCreate
@@ -46,11 +55,15 @@ stock FIX_GangZoneCreate(Float:minx, Float:miny, Float:maxx, Float:maxy)
 
 stock FIX_GangZoneDestroy(zone)
 {
-	new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "gz_%i", zone);
-	DeleteSVar(buf);
+	#if defined SAMP_FIXER_SINGLES
+	    t_IsValidGangZone[zone] = false;
+	#else
+		new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "gz_%i", zone);
+		DeleteSVar(buf);
+	#endif
 
 	return GangZoneDestroy(zone);
 }
@@ -64,10 +77,14 @@ stock FIX_GangZoneDestroy(zone)
 
 stock IsValidGangZone(zone)
 {
-	new
-		buf[40]
-	;
-	format(buf, sizeof(buf), "gz_%i", ret);
+	#if defined SAMP_FIXER_SINGLES
+	    return t_IsValidGangZone[zone];
+	#else
+		new
+			buf[40]
+		;
+		format(buf, sizeof(buf), "gz_%i", ret);
 
-	return (GetSVarType(buf) == SVAR_TYPE_NONE) : false ? true;
+		return (GetSVarType(buf) == SVAR_TYPE_NONE) : false ? true;
+	#endif
 }
