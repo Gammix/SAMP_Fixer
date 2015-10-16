@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_attachments_included
-#pragma library fix_attachments
 
 /*
  * ===============
@@ -28,16 +27,47 @@
  *
  */
 
+#if defined SAMP_FIXER_SINGLES
+	enum e_ATTACHMENT_DATA
+	{
+	    bool:	att_used,
+	            att_modelid,
+	            att_boneid,
+     	Float:	att_offsetX,
+     	Float:	att_offsetY,
+     	Float:	att_offsetZ,
+     	Float:  att_rotX,
+     	Float:  att_rotY,
+     	Float:  att_rotZ,
+     	Float:  att_scaleX,
+     	Float:  att_scaleY,
+     	Float:  att_scaleZ,
+				att_color1,
+				att_color2
+	};
+	
+	static
+	    t_PlayerAttachments[MAX_PLAYER_ATTACHED_OBJECTS][e_ATTACHMENT_DATA]
+ 	;
+#endif
+
 public OnPlayerDisconnect(playerid, reason)
 {
-	new
-		buf[40]
-	;
+	#if ! defined SAMP_FIXER_SINGLES
+		new
+			buf[40]
+		;
+	#endif
+	
 	for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
 	{
- 		format(buf, sizeof(buf), "att%_used", i);
-		if (GetPVarInt(playerid, buf))
-	    {
+		#if defined SAMP_FIXER_SINGLES
+			if (t_PlayerAttachments[i][att_used])
+		#else
+ 			format(buf, sizeof(buf), "att%_used", i);
+			if (GetPVarInt(playerid, buf))
+   		#endif
+	   	{
 	        RemovePlayerAttachedObject(playerid, i);
 	    }
 	}
@@ -78,13 +108,19 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			case WEAPON_SNIPER, WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, WEAPON_CAMERA:
 			{
-				new
-			 		buf[40]
-				;
+				#if ! defined SAMP_FIXER_SINGLES
+					new
+				 		buf[40]
+					;
+				#endif
 			    for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
 				{
-					format(buf, sizeof(buf), "att%i_used", i);
-				    if (IsPlayerAttachedObjectSlotUsed(playerid, i) && GetPVarInt(playerid, buf))
+					#if defined SAMP_FIXER_SINGLES
+				   	 	if (IsPlayerAttachedObjectSlotUsed(playerid, i) && t_PlayerAttachments[i][att_used])
+					#else
+			 			format(buf, sizeof(buf), "att%_used", i);
+				   	 	if (IsPlayerAttachedObjectSlotUsed(playerid, i) && GetPVarInt(playerid, buf))
+			   		#endif
 				    {
 						RemovePlayerAttachedObject(playerid, i);
 	     			}
@@ -94,56 +130,70 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 	else if(RELEASED(KEY_AIM))
 	{
-		new
-			buf[40]
-		;
+		#if ! defined SAMP_FIXER_SINGLES
+			new
+				buf[40]
+			;
+		#endif
 	    for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
 		{
-			format(buf, sizeof(buf), "att%i_used", i);
-		    if (! IsPlayerAttachedObjectSlotUsed(playerid, i) && GetPVarInt(playerid, buf))
+			#if defined SAMP_FIXER_SINGLES
+			   	if (! IsPlayerAttachedObjectSlotUsed(playerid, i) && t_PlayerAttachments[i][att_used])
+			#else
+			 	format(buf, sizeof(buf), "att%_used", i);
+			  	if (! IsPlayerAttachedObjectSlotUsed(playerid, i) && GetPVarInt(playerid, buf))
+			#endif
 		    {
-		        new
-		            		modelid,
-		            		boneid,
-		            Float:  offset[3],
-		            Float:  rot[3],
-		            Float:  scale[3],
-		                    color[2]
-				;
-				format(buf, sizeof(buf), "att%_modelid", i);
-				modelid = GetPVarInt(playerid, buf);
+				#if defined SAMP_FIXER_SINGLES
+		        	SetPlayerAttachedObject(playerid, i, t_PlayerAttachments[i][att_modelid], t_PlayerAttachments[i][att_boneid],
+												t_PlayerAttachments[i][att_offsetX], t_PlayerAttachments[i][att_offsetY], t_PlayerAttachments[i][att_offsetZ],
+													t_PlayerAttachments[i][att_rotX], t_PlayerAttachments[i][att_rotY], t_PlayerAttachments[i][att_rotZ],
+														t_PlayerAttachments[i][att_scaleX], t_PlayerAttachments[i][att_scaleY], t_PlayerAttachments[i][att_scaleZ],
+															t_PlayerAttachments[i][att_color1], t_PlayerAttachments[i][att_color2]);
+                #else
+			        new
+			            		modelid,
+			            		boneid,
+			            Float:  offset[3],
+			            Float:  rot[3],
+			            Float:  scale[3],
+			                    color[2]
+					;
+					format(buf, sizeof(buf), "att%_modelid", i);
+					modelid = GetPVarInt(playerid, buf);
 
-				format(buf, sizeof(buf), "att%_bone", i);
-				boneid = GetPVarInt(playerid, buf);
+					format(buf, sizeof(buf), "att%_bone", i);
+					boneid = GetPVarInt(playerid, buf);
 
-				format(buf, sizeof(buf), "att%_offset_x", i);
-				offset[0] = GetPVarFloat(playerid, buf);
-				format(buf, sizeof(buf), "att%_offset_y", i);
-				offset[1] = GetPVarFloat(playerid, buf);
-				format(buf, sizeof(buf), "att%_offset_z", i);
-				offset[2] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_offset_x", i);
+					offset[0] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_offset_y", i);
+					offset[1] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_offset_z", i);
+					offset[2] = GetPVarFloat(playerid, buf);
 
-				format(buf, sizeof(buf), "att%_rot_x", i);
-				rot[0] = GetPVarFloat(playerid, buf);
-				format(buf, sizeof(buf), "att%_rot_y", i);
-				rot[1] = GetPVarFloat(playerid, buf);
-				format(buf, sizeof(buf), "att%_rot_z", i);
-				rot[2] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_rot_x", i);
+					rot[0] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_rot_y", i);
+					rot[1] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_rot_z", i);
+					rot[2] = GetPVarFloat(playerid, buf);
 
-				format(buf, sizeof(buf), "att%_scale_x", i);
-				scale[0] = GetPVarFloat(playerid, buf);
-				format(buf, sizeof(buf), "att%_scale_y", i);
-				scale[1] = GetPVarFloat(playerid, buf);
-				format(buf, sizeof(buf), "att%_scale_z", i);
-				scale[2] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_scale_x", i);
+					scale[0] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_scale_y", i);
+					scale[1] = GetPVarFloat(playerid, buf);
+					format(buf, sizeof(buf), "att%_scale_z", i);
+					scale[2] = GetPVarFloat(playerid, buf);
 
-				format(buf, sizeof(buf), "att%_color_1", i);
-				color[0] = GetPVarInt(playerid, buf);
-				format(buf, sizeof(buf), "att%_color_2", i);
-				color[1] = GetPVarInt(playerid, buf);
+					format(buf, sizeof(buf), "att%_color_1", i);
+					color[0] = GetPVarInt(playerid, buf);
+					format(buf, sizeof(buf), "att%_color_2", i);
+					color[1] = GetPVarInt(playerid, buf);
 
-		        SetPlayerAttachedObject(playerid, i, modelid, boneid, offset[0], offset[1], offset[2], rot[0],rot[1], rot[2], scale[0], scale[1], scale[2], color[0], color[1]);
-		    }
+		        	SetPlayerAttachedObject(playerid, i, modelid, boneid, offset[0], offset[1], offset[2], rot[0],rot[1], rot[2], scale[0], scale[1], scale[2], color[0], color[1]);
+				#endif
+			}
 		}
 	}
 
@@ -163,47 +213,74 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
     forward ATT_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
 #endif
 
+#undef KEY_AIM
+#undef HOLDING
+#undef RELEASED
+
 stock ATT_SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX = 0.0, Float:fOffsetY = 0.0, Float:fOffsetZ = 0.0, Float:fRotX = 0.0, Float:fRotY = 0.0, Float:fRotZ = 0.0, Float:fScaleX = 1.0, Float:fScaleY = 1.0, Float:fScaleZ = 1.0, materialcolor1 = 0, materialcolor2 = 0)
 {
 	if (SetPlayerAttachedObject(playerid, index, modelid, bone, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ, materialcolor1, materialcolor2))
 	{
-		new
-		    buf[40]
-		;
-		format(buf, sizeof(buf), "att%_modelid", index);
-		SetPVarInt(playerid, buf, modelid);
+		#if defined SAMP_FIXER_SINGLES
+			t_PlayerAttachments[index][att_modelid] = modelid;
 
-		format(buf, sizeof(buf), "att%_bone", index);
-		SetPVarInt(playerid, buf, bone);
+			t_PlayerAttachments[index][att_boneid] = bone;
 
-		format(buf, sizeof(buf), "att%_offset_x", index);
-		SetPVarFloat(playerid, buf, fOffsetX);
-		format(buf, sizeof(buf), "att%_offset_y", index);
-		SetPVarFloat(playerid, buf, fOffsetY);
-		format(buf, sizeof(buf), "att%_offset_z", index);
-		SetPVarFloat(playerid, buf, fOffsetZ);
+			t_PlayerAttachments[index][att_offsetX] = fOffsetX;
+			t_PlayerAttachments[index][att_offsetY] = fOffsetY;
+			t_PlayerAttachments[index][att_offsetZ] = fOffsetZ;
 
-		format(buf, sizeof(buf), "att%_rot_x", index);
-		SetPVarFloat(playerid, buf, fRotX);
-		format(buf, sizeof(buf), "att%_rot_y", index);
-		SetPVarFloat(playerid, buf, fRotY);
-		format(buf, sizeof(buf), "att%_rot_z", index);
-		SetPVarFloat(playerid, buf, fRotZ);
+			t_PlayerAttachments[index][att_rotX] = fRotX;
+			t_PlayerAttachments[index][att_rotY] = fRotY;
+			t_PlayerAttachments[index][att_rotZ] = fRotZ;
 
-		format(buf, sizeof(buf), "att%_scale_x", index);
-		SetPVarFloat(playerid, buf, fScaleX);
-		format(buf, sizeof(buf), "att%_scale_y", index);
-		SetPVarFloat(playerid, buf, fScaleY);
-		format(buf, sizeof(buf), "att%_scale_z", index);
-		SetPVarFloat(playerid, buf, fScaleZ);
+			t_PlayerAttachments[index][att_scaleX] = fScaleX;
+			t_PlayerAttachments[index][att_scaleY] = fScaleY;
+			t_PlayerAttachments[index][att_scaleZ] = fScaleZ;
 
-		format(buf, sizeof(buf), "att%_color_1", index);
-		SetPVarInt(playerid, buf, materialcolor1);
-		format(buf, sizeof(buf), "att%_color_2", index);
-		SetPVarInt(playerid, buf, materialcolor2);
+			t_PlayerAttachments[index][att_color1] = materialcolor1;
+			t_PlayerAttachments[index][att_color2] = materialcolor2;
 
-		format(buf, sizeof(buf), "att%_used", index);
-		SetPVarInt(playerid, buf, 1);
+			t_PlayerAttachments[index][att_used] = true;
+		#else
+			new
+			    buf[40]
+			;
+			format(buf, sizeof(buf), "att%_modelid", index);
+			SetPVarInt(playerid, buf, modelid);
+
+			format(buf, sizeof(buf), "att%_bone", index);
+			SetPVarInt(playerid, buf, bone);
+
+			format(buf, sizeof(buf), "att%_offset_x", index);
+			SetPVarFloat(playerid, buf, fOffsetX);
+			format(buf, sizeof(buf), "att%_offset_y", index);
+			SetPVarFloat(playerid, buf, fOffsetY);
+			format(buf, sizeof(buf), "att%_offset_z", index);
+			SetPVarFloat(playerid, buf, fOffsetZ);
+
+			format(buf, sizeof(buf), "att%_rot_x", index);
+			SetPVarFloat(playerid, buf, fRotX);
+			format(buf, sizeof(buf), "att%_rot_y", index);
+			SetPVarFloat(playerid, buf, fRotY);
+			format(buf, sizeof(buf), "att%_rot_z", index);
+			SetPVarFloat(playerid, buf, fRotZ);
+
+			format(buf, sizeof(buf), "att%_scale_x", index);
+			SetPVarFloat(playerid, buf, fScaleX);
+			format(buf, sizeof(buf), "att%_scale_y", index);
+			SetPVarFloat(playerid, buf, fScaleY);
+			format(buf, sizeof(buf), "att%_scale_z", index);
+			SetPVarFloat(playerid, buf, fScaleZ);
+
+			format(buf, sizeof(buf), "att%_color_1", index);
+			SetPVarInt(playerid, buf, materialcolor1);
+			format(buf, sizeof(buf), "att%_color_2", index);
+			SetPVarInt(playerid, buf, materialcolor2);
+
+			format(buf, sizeof(buf), "att%_used", index);
+			SetPVarInt(playerid, buf, 1);
+		#endif
 
 		return true;
 	}
@@ -222,46 +299,72 @@ stock ATT_SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX
 
 stock GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX, &Float:fOffsetY, &Float:fOffsetZ, &Float:fRotX, &Float:fRotY, &Float:fRotZ, &Float:fScaleX, &Float:fScaleY, &Float:fScaleZ, &materialcolor1, &materialcolor2)
 {
-	new
-	    buf[40]
-	;
- 	format(buf, sizeof(buf), "att%_used", index);
-    if (GetPVarInt(playerid, buf))
-    {
-	    format(buf, sizeof(buf), "att%_modelid", index);
-	    modelid = GetPVarInt(playerid, buf);
+	#if defined SAMP_FIXER_SINGLES
+	    if (t_PlayerAttachments[index][att_used])
+	    {
+			modelid = t_PlayerAttachments[index][att_modelid];
 
-	    format(buf, sizeof(buf), "att%_bone", index);
-	    boneid = GetPVarInt(playerid, buf);
+			bone = t_PlayerAttachments[index][att_boneid];
 
-	    format(buf, sizeof(buf), "att%_offset_x", index);
-	    foffsetX = GetPVarFloat(playerid, buf);
-	    format(buf, sizeof(buf), "att%_offset_y", index);
-	    foffsetY = GetPVarFloat(playerid, buf);
-	    format(buf, sizeof(buf), "att%_offset_z", index);
-	    foffsetZ = GetPVarFloat(playerid, buf);
+			fOffsetX = t_PlayerAttachments[index][att_offsetX];
+			fOffsetY = t_PlayerAttachments[index][att_offsetY];
+			fOffsetZ = t_PlayerAttachments[index][att_offsetZ];
 
-	    format(buf, sizeof(buf), "att%_rot_x", index);
-	    fRotX = GetPVarFloat(playerid, buf);
-	    format(buf, sizeof(buf), "att%_rot_y", index);
-	    fRrotY = GetPVarFloat(playerid, buf);
-	    format(buf, sizeof(buf), "att%_rot_z", index);
-	    fRotZ = GetPVarFloat(playerid, buf);
+			fRotX = t_PlayerAttachments[index][att_rotX];
+			fRotY = t_PlayerAttachments[index][att_rotY];
+			fRotZ = t_PlayerAttachments[index][att_rotZ];
 
-	    format(buf, sizeof(buf), "att%_scale_x", index);
-	    fScaleX = GetPVarFloat(playerid, buf);
-	    format(buf, sizeof(buf), "att%_scale_y", index);
-	    fScaleY = GetPVarFloat(playerid, buf);
-	    format(buf, sizeof(buf), "att%_scale_z", index);
-	    fScaleZ = GetPVarFloat(playerid, buf);
+			fScaleX = t_PlayerAttachments[index][att_scaleX];
+			fScaleY = t_PlayerAttachments[index][att_scaleY];
+			fScaleZ = t_PlayerAttachments[index][att_scaleZ];
 
-	    format(buf, sizeof(buf), "att%_color_1", index);
-	    materialcolor1 = GetPVarInt(playerid, buf);
-	    format(buf, sizeof(buf), "att%_color_2", index);
-	    materialcolor2 = GetPVarInt(playerid, buf);
+			materialcolor1 = t_PlayerAttachments[index][att_color1];
+			materialcolor2 = t_PlayerAttachments[index][att_color2];
 
-        return true;
-    }
+        	return true;
+		}
+	#else
+		new
+		    buf[40]
+		;
+	 	format(buf, sizeof(buf), "att%_used", index);
+	    if (GetPVarInt(playerid, buf))
+	    {
+		    format(buf, sizeof(buf), "att%_modelid", index);
+		    modelid = GetPVarInt(playerid, buf);
+
+		    format(buf, sizeof(buf), "att%_bone", index);
+		    boneid = GetPVarInt(playerid, buf);
+
+		    format(buf, sizeof(buf), "att%_offset_x", index);
+		    foffsetX = GetPVarFloat(playerid, buf);
+		    format(buf, sizeof(buf), "att%_offset_y", index);
+		    foffsetY = GetPVarFloat(playerid, buf);
+		    format(buf, sizeof(buf), "att%_offset_z", index);
+		    foffsetZ = GetPVarFloat(playerid, buf);
+
+		    format(buf, sizeof(buf), "att%_rot_x", index);
+		    fRotX = GetPVarFloat(playerid, buf);
+		    format(buf, sizeof(buf), "att%_rot_y", index);
+		    fRrotY = GetPVarFloat(playerid, buf);
+		    format(buf, sizeof(buf), "att%_rot_z", index);
+		    fRotZ = GetPVarFloat(playerid, buf);
+
+		    format(buf, sizeof(buf), "att%_scale_x", index);
+		    fScaleX = GetPVarFloat(playerid, buf);
+		    format(buf, sizeof(buf), "att%_scale_y", index);
+		    fScaleY = GetPVarFloat(playerid, buf);
+		    format(buf, sizeof(buf), "att%_scale_z", index);
+		    fScaleZ = GetPVarFloat(playerid, buf);
+
+		    format(buf, sizeof(buf), "att%_color_1", index);
+		    materialcolor1 = GetPVarInt(playerid, buf);
+		    format(buf, sizeof(buf), "att%_color_2", index);
+		    materialcolor2 = GetPVarInt(playerid, buf);
+		    
+        	return true;
+		}
+	#endif
     else
     {
 		return false;
@@ -272,12 +375,16 @@ stock ATT_RemovePlayerAttachedObject(playerid, index)
 {
 	if (RemovePlayerAttachedObject(playerid, index))
 	{
-		new
-		    buf[40]
-		;
-	 	format(buf, sizeof(buf), "att%_used", index);
-	 	SetPVarInt(playerid, buf, 0);
-
+		#if defined SAMP_FIXER_SINGLES
+		    t_PlayerAttachments[index][att_used] = false;
+		#else
+			new
+			    buf[40]
+			;
+		 	format(buf, sizeof(buf), "att%_used", index);
+		 	SetPVarInt(playerid, buf, 0);
+		#endif
+		
 		return true;
 	}
 	else
