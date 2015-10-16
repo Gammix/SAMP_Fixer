@@ -14,14 +14,17 @@
  * fix_anims [IMPORTANT]
  * fix_attachments [IMPORTANT]
  * fix_checkpoint
+ * fix_files [IMPORTANT]
  * fix_gametext
  * fix_gangzone
  * fix_kickban
+ * fix_menu [IMPORTANT]
  * fix_others [IMPORTANT]
- * fix_pause
  * fix_players [IMPORTANT]
  * fix_server
  * fix_string [IMPORTANT]
+ * fix_tildes [IMPORTANT]
+ * fix_tickcount
  * fix_vehicles [IMPORTANT]
  *
  * ============
@@ -40,6 +43,8 @@
  * xX_Simon_Xx
  * RyDeR`
  * MP2
+ * KHKKhalid
+ * JernejL
  *
 */
 
@@ -48,23 +53,21 @@
 #include "SAMP_Fixer/fix_anims"
 #include "SAMP_Fixer/fix_attachments"
 #include "SAMP_Fixer/fix_checkpoint"
+#include "SAMP_Fixer/fix_file"
 #include "SAMP_Fixer/fix_gametext"
 #include "SAMP_Fixer/fix_gangzone"
 #include "SAMP_Fixer/fix_kickban"
+#include "SAMP_Fixer/fix_menu"
 #include "SAMP_Fixer/fix_others"
-#include "SAMP_Fixer/fix_pause"
 #include "SAMP_Fixer/fix_player"
 #include "SAMP_Fixer/fix_server"
 #include "SAMP_Fixer/fix_string"
+#include "SAMP_Fixer/fix_tickcount"
+#include "SAMP_Fixer/fix_tildes_crash"
 #include "SAMP_Fixer/fix_vehicles"
 
 public OnGameModeInit()
 {
-	print("\n======================\n");
-	print("SA-MP Fixer v1.0");
-	print("Librarby loaded...");
-	print("\n======================\n");
-
 	EnableTirePopping(1);
 	AllowInteriorWeapons(1);
 	AllowAdminTeleport(0);
