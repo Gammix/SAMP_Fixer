@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_server_included
-#pragma library fix_server
 
 /*
  * ===============
@@ -37,12 +36,6 @@
  *
  * ADD:			EnableVehicleNames(toggle);
  * INFO:  		Show vehicle names when player enters one, singleplayer feature.
- *
- * ADD:			GetPlayerZone(playerid, zone[]);
- * INFO:  		Get player zone name.
- *
- * ADD:			GetPlayerCity(playerid, city[]);
- * INFO:  		Get player city name.
  *
  */
 
@@ -594,7 +587,7 @@ stock EnableVehicleNames(toggle)
     return true;
 }
 
-stock GetPlayerZone(playerid, zone[])
+stock static GetPlayerZone(playerid, zone[])
 {
 	new
 	    Float:pos[3]
@@ -619,7 +612,7 @@ stock GetPlayerZone(playerid, zone[])
 	}
 }
 
-stock GetPlayerCity(playerid, city[])
+stock static GetPlayerCity(playerid, city[])
 {
 	new
 	    Float:pos[3]
@@ -846,7 +839,7 @@ public OnPlayerSpawn(playerid)
 
 		GetPlayerPos(playerid, t_PlayerLastPos[playerid][0], t_PlayerLastPos[playerid][1], t_PlayerLastPos[playerid][2]);
 	}
-	
+
     #if defined S_OnPlayerSpawn
 		return S_OnPlayerSpawn(playerid);
 	#else
