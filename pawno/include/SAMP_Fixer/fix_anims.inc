@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_anims_included
-#pragma library fix_anims
 
 /*
  * ===============
