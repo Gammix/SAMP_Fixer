@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_string_included
-#pragma library fix_string
 
 /*
  * ===============
@@ -22,15 +21,6 @@
  * FIX:         valstr
  * PROBLEM:  	Crashes on large numbers.
  * SOLUTION:  	Use "format" instead.
- *
- * ADD:			strsplit(source[], dest[][], delimeter = ' ', size = sizeof(dest[]));
- * INFO:  		Distribute strings with respect to a special character.
- *
- * ADD:			strbin(source[], const dest[], maxlength = sizeof(dest));
- * INFO:  		Convert a string into its binary form (1s and 0s).
- *
- * ADD:			strreplace(source[], const search[], const replace[], bool:ignorecase = false, limit = -1);
- * INFO:  		Replace special characters from the whole string.
  *
  */
 
@@ -114,79 +104,3 @@ stock FIX_valstr(dest[], value, bool:pack = false)
 	#define _ALS_valstr
 #endif
 #define valstr FIX_valstr
-
-stock strsplit(source[], dest[][], delimeter = ' ', size = sizeof(dest[]))
-{
-	new
-	    k,
-	    l
-	;
-	for (new i, j = strlen(src); i <= j; i++)
-	{
-		if (src[i] == delimeter || i == j)
-		{
-			new
-			    m = strmid(dest[k], src, l, i, size)
-			;
-
-   			dest[k][m] = 0;
-
-   			l = i + 1;
-   			k += 1;
-		}
-	}
-
-	return k;
-}
-
-stock strbin(source[], const dest[], maxlength = sizeof(dest))
-{
-	for (new i, j = strlen(source); i < j; i++)
-	{
-		new
-			mask = 1 << (8 - 1),
-			bits[8]
-		;
-
-		for (new d; d < 8; d++)
-		{
-			if ((str[i] & mask) == 0)
-			{
-				bits[d] = '0';
-			}
-			else
-			{
-				bits[d] = '1';
-			}
-
-			mask >>= 1;
-		}
-
-		strcat(dest, bits, maxlength);
-   	}
-}
-
-stock strreplace(source[], const search[], const replace[], bool:ignorecase = false, limit = -1)
-{
-	new
-		count,
-		i = strfind(source, search, ignorecase)
-	;
-
-	while (i != -1 && count <= limit)
-	{
-		strdel(source, i, i + (l[1] - 1));
-		strins(source, replace, i, l[0]);
-
-		i = strfind(source, search, ignorecase);
-		
-		count++;
-			
-		if (limit >= 0 && count > limit)
-		{
-			return count;
-		}
-	}
-
-	return count;
-}
