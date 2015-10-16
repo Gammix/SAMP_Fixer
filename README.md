@@ -1,4 +1,4 @@
-# SAMP_Fixer
+# SAMP_Fixer `Build 2`
 Community patch for buggy SA:MP functions and glitches experienced in game.
 
 ## Requirements
@@ -12,14 +12,17 @@ There are 12 branches of this librarby:
  * fix_anims [IMPORTANT]
  * fix_attachments [IMPORTANT]
  * fix_checkpoint
+ * fix_files [IMPORTANT]
  * fix_gametext
  * fix_gangzone
  * fix_kickban
+ * fix_menu [IMPORTANT]
  * fix_others [IMPORTANT]
- * fix_pause
  * fix_players [IMPORTANT]
  * fix_server
  * fix_string [IMPORTANT]
+ * fix_tildes [IMPORTANT]
+ * fix_tickcount
  * fix_vehicles [IMPORTANT]
 
 ## Why to use this?
@@ -57,4 +60,18 @@ public OnGameModeInit()
 
 	return 1;
 }
+```
+#SAMP_FIXER_SINGLES ?
+Build 2 now supports normal arrays than PVars and SVars. By default the this feature is disabled.
+
+- What is advantage of using SINGLES?
+> `The speed of performing actions and reading data is increased.`
+
+- What is the disadvantage of not using SINGLES?
+> `You cannot access the data accross multiple platforms, you won't get the correct FIX value in other scripts.`
+
+- How to enable SINGLES?
+> Before including the library, add/define this macro:
+```pawn
+#define SAMP_FIXER_SINGLES
 ```
