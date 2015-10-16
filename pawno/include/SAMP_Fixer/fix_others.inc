@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_others_included
-#pragma library fix_others
 
 /*
  * ===============
@@ -35,9 +34,6 @@
  * PROBLEM:  	Illegal weapons and bullets can crash server.
  * SOLUTION:    Detect under OnPlayerWeaponShot and desync when invalid
  *
- * ADD:			GetPlayerFPS(playerid);
- * INFO:  		Retrieve player Frames Per Second.
- *
  */
 
 #if ! defined KEY_AIM
@@ -46,71 +42,6 @@
 
 #if ! defined SPECIAL_ACTION_PISSING
 	#define SPECIAL_ACTION_PISSING (68)
-#endif
-
-static
-	bool:   t_OnPlayerUpdate[MAX_PLAYERS],
-			t_PlayerLastUpdate[MAX_PLAYERS]
-;
-
-public OnPlayerConnect(playerid)
-{
-	if (GetPVarType(playerid, "FPS_Update") == PLAYER_VARTYPE_NONE)
-	{
-	    t_OnPlayerUpdate[playerid] = true;
-	    SetPVarInt(playerid, "FPS_Update", 1);
-
-	    SetPlayerDrunkLevel(playerid, 120);
-	    t_PlayerLastUpdate[playerid] = gettime();
-	}
-	else
-	{
-	    t_OnPlayerUpdate[playerid] = false;
-	}
-
-    #if defined EX_OnPlayerConnect
-		return EX_OnPlayerConnect(playerid);
-	#else
-		return 1;
-	#endif
-}
-#if defined _ALS_OnPlayerConnect
-	#undef OnPlayerConnect
-#else
-	#define _ALS_OnPlayerConnect
-#endif
-#define OnPlayerConnect EX_OnPlayerConnect
-#if defined EX_OnPlayerConnect
-	forward EX_OnPlayerConnect(playerid);
-#endif
-
-public OnPlayerUpdate(playerid)
-{
-	if (t_OnPlayerUpdate[playerid])
-	{
-     	if (t_PlayerLastUpdate[playerid] + 60 <= gettime())
-	    {
-	        SetPVarInt(playerid, "PlayerFPS", 120 - GetPlayerDrunkLevel(playerid));
-	        SetPlayerDrunkLevel(playerid, 120);
-
-	       	t_PlayerLastUpdate[playerid] = gettime();
-	    }
-    }
-
-    #if defined EX_OnPlayerUpdate
-		return EX_OnPlayerUpdate(playerid);
-	#else
-		return 1;
-	#endif
-}
-#if defined _ALS_OnPlayerUpdate
-   #undef OnPlayerUpdate
-#else
-    #define _ALS_OnPlayerUpdate
-#endif
-#define OnPlayerUpdate EX_OnPlayerUpdate
-#if defined EX_OnPlayerUpdate
-	forward EX_OnPlayerUpdate(playerid);
 #endif
 
 public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
@@ -185,13 +116,3 @@ stock FIX_IsPlayerConnected(playerid)
 	#define _ALS_IsPlayerConnected
 #endif
 #define IsPlayerConnected FIX_IsPlayerConnected
-
-stock GetPlayerFPS(playerid)
-{
-	if (! IsPlayerConnected(playerid))
-	{
-	    return 0;
-	}
-
-	return GetPVarInt(playerid, "PlayerFPS");
-}
