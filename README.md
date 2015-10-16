@@ -8,7 +8,7 @@ Latest SA-MP update only: http://forum.sa-mp.com/showthread.php?t=581259
 http://forum.sa-mp.com/showthread.php?t=591458
 
 ## Library structure
-There are 12 branches of this librarby:
+There are 15 branches of this librarby:
  * fix_anims [IMPORTANT]
  * fix_attachments [IMPORTANT]
  * fix_checkpoint
