@@ -2,7 +2,6 @@
 	#endinput
 #endif
 #define _fix_kickban_included
-#pragma library fix_kickban
 
 /*
  * ===============
