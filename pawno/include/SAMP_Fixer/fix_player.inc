@@ -208,10 +208,10 @@ stock FIX_TogglePlayerControllable(playerid, toggle)
 {
 	if (! toggle)
 	{
-		ClearAnimations(playerid, 1);
+		BAD_ClearAnimations(playerid, 1);
 	}
 
-	return TogglePlayerControllable(playerid, false);
+	return TogglePlayerControllable(playerid, toggle);
 }
 #if defined _ALS_TogglePlayerControllable
     #undef TogglePlayerControllable
