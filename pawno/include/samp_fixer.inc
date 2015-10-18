@@ -63,7 +63,7 @@
 #include "SAMP_Fixer/fix_server"
 #include "SAMP_Fixer/fix_string"
 #include "SAMP_Fixer/fix_tickcount"
-#include "SAMP_Fixer/fix_tildes_crash"
+#include "SAMP_Fixer/fix_tildes"
 #include "SAMP_Fixer/fix_vehicles"
 
 public OnGameModeInit()
