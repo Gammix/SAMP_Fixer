@@ -84,11 +84,11 @@ stock FIX_strins(string[], const substr[], pos, maxlength = sizeof(string))
 stock FIX_valstr(dest[], value, bool:pack = false)
 {
 	static const
-		cellmin[] = !"-2147483648"
+		__cellmin[] = !"-2147483648"
 	;
 	if (value == cellmin)
 	{
-		pack && strpack(dest, sc_szCellmin, 12) || strunpack(dest, sc_szCellmin, 12);
+		pack && strpack(dest, __cellmin, 12) || strunpack(dest, __cellmin, 12);
 	}
 	else
 	{
