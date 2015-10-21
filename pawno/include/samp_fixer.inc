@@ -28,15 +28,10 @@
  * fix_vehicles [IMPORTANT]
  *
  * ============
- * 	AUTHOR
+ * 	AUTHORS/DEVELOPERS
  * ============
  *
  * Gammix
- *
- * ============
- * 	SPECIAL THANKS
- * ============
- *
  * SA-MP Community
  * Y_Less
  * Slice
