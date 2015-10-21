@@ -22,6 +22,10 @@
  * PROBLEM:  	Crashes on large numbers.
  * SOLUTION:  	Use "format" instead.
  *
+ * FIX:         strcmp
+ * PROBLEM:  	Return 0 if anyone of the string is empty.
+ * SOLUTION:  	Return 1 if the 1 string is empty and second is not.
+ *
  */
 
 stock FIX_strins(string[], const substr[], pos, maxlength = sizeof(string))
@@ -104,3 +108,30 @@ stock FIX_valstr(dest[], value, bool:pack = false)
 	#define _ALS_valstr
 #endif
 #define valstr FIX_valstr
+
+stock FIX_strcmp(const string1[], const string2[], bool:ignorecase = false, length = cellmax)
+{
+	if (ignorecase)
+	{
+		if (string1[0] != string2[0])
+		{
+			return 1;
+		}
+	}
+	else
+	{
+		if (strlen(string1) != strlen(string2))
+		{
+			return 1;
+		}
+	}
+
+	return strcmp(string1, string2, ignorecase, length);
+}
+#if defined _ALS_strcmp
+	#undef strcmp
+#else
+	native BAD_strcmp(const string1[], const string2[], bool:ignorecase = false, length = cellmax) = strcmp;
+	#define _ALS_strcmp
+#endif
+#define strcmp FIX_strcmp
