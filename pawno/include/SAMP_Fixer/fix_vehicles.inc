@@ -540,7 +540,7 @@ stock VEH_CreateVehicle(modelid, Float:x, Float:y, Float:z, Float:rotation, colo
         t_VehicleData[vehicleid][1] = color1;
         t_VehicleData[vehicleid][2] = color2;
 
-        t_VehicleData[vehicleid][4] = 3;
+        t_VehicleData[vehicleid][3] = 3;
 	#else
 		new
 		    buf[40]
