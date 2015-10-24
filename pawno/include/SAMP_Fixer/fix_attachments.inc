@@ -338,7 +338,7 @@ stock GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX,
 		    modelid = GetPVarInt(playerid, buf);
 
 		    format(buf, sizeof(buf), "att%i_bone", index);
-		    boneid = GetPVarInt(playerid, buf);
+		    bone = GetPVarInt(playerid, buf);
 
 		    format(buf, sizeof(buf), "att%i_offset_x", index);
 		    foffsetX = GetPVarFloat(playerid, buf);
