@@ -101,13 +101,13 @@ stock FIX_SetPlayerCheckpoint(playerid, Float:x, Float:y, Float:z, Float:size)
         {
             KillTimer(t_PlayerCPTimer[playerid][0]);
         }
-        t_PlayerCPTimer[playerid][0] = SetTimerEx("FIX_OnCheckpointSet", 250, false, "iiffffff", playerid, -1, x, y, z, 0.0, 0.0, 0.0);
+        t_PlayerCPTimer[playerid][0] = SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, -1, x, y, z, size, 0.0, 0.0, 0.0);
 	#else
         if (GetPVarType(playerid, "PlayerCPTimer") != PLAYER_VARTYPE_NONE)
         {
             KillTimer(GetPvarInt(playerid, "PlayerCPTimer"));
         }
-        SetPvarInt(playerid, "PlayerCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iiffffff", playerid, -1, x, y, z, 0.0, 0.0, 0.0));
+        SetPvarInt(playerid, "PlayerCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, -1, x, y, z, size, 0.0, 0.0, 0.0));
 	#endif
 	
 	return true;
@@ -129,13 +129,13 @@ stock FIX_SetPlayerRaceCheckpoint(playerid, type, Float:x, Float:y, Float:z, Flo
         {
             KillTimer(t_PlayerCPTimer[playerid][1]);
         }
-        t_PlayerCPTimer[playerid][1] = SetTimerEx("FIX_OnCheckpointSet", 250, false, "iiffffff", playerid, type, x, y, z, nextx, nexty, nextz);
+        t_PlayerCPTimer[playerid][1] = SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, type, x, y, z, size, nextx, nexty, nextz);
 	#else
         if (GetPVarType(playerid, "PlayerRCPTimer") != PLAYER_VARTYPE_NONE)
         {
             KillTimer(GetPvarInt(playerid, "PlayerRCPTimer"));
         }
-        SetPvarInt(playerid, "PlayerRCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iiffffff", playerid, type, x, y, z, nextx, nexty, nextz));
+        SetPvarInt(playerid, "PlayerRCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, type, x, y, z, size, nextx, nexty, nextz));
 	#endif
 	
 	return true;
