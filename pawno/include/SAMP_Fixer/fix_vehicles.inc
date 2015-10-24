@@ -26,10 +26,6 @@
  * PROBLEM:  	Server can crash when illegal mods are used by hackers.
  * SOLUTION:  	Add check against illegal mods under OnVehicleMod.
  *
- * FIX:         Anti G bug
- * PROBLEM:  	If someone has a locked car and you want to enter their passenger seat, all you have to do is press G near their car when they start moving. You will be placed on the passenger seat.
- * SOLUTION:  	Adds entry checks, range checks while entering a vehicle as passenger to avoid G Bug.
- *
  * ADD:			CreateVehicle/AddStaticVehicle/AddStaticVehicleEx
  * INFO:  		Adds random color option when "color1" and "color2" params are set to -1.
  *
@@ -44,21 +40,11 @@
  *
  */
 
-enum e_GBUG_DATA
-{
-	Float:	gbugPlayerPos[3],
- 	Float:	gbugVehiclePos[3],
-  			gbugEnteringState,
-        	gbugLastTick
-};
-
-static
-	#if defined SAMP_FIXER_SINGLES
-	        t_VehicleData[MAX_VEHICLES][4],
-	#endif
-	bool:	t_OnPlayerUpdate,
-			t_PlayerGBug[MAX_PLAYERS][e_GBUG_DATA]
-;
+#if defined SAMP_FIXER_SINGLES
+	static
+	        t_VehicleData[MAX_VEHICLES][4]
+	;
+#endif
 
 static const t_VehicleColors[][] =
 {
@@ -553,7 +539,7 @@ stock VEH_CreateVehicle(modelid, Float:x, Float:y, Float:z, Float:rotation, colo
 
         t_VehicleData[vehicleid][1] = color1;
         t_VehicleData[vehicleid][2] = color2;
-        
+
         t_VehicleData[vehicleid][4] = 3;
 	#else
 		new
@@ -570,7 +556,7 @@ stock VEH_CreateVehicle(modelid, Float:x, Float:y, Float:z, Float:rotation, colo
 		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
 		SetSVarInt(buf, 3);
 	#endif
-	
+
 	return vehicleid;
 }
 #if defined _ALS_CreateVehicle
@@ -738,7 +724,7 @@ stock GetVehicleColor(vehicleid, &color1, &color2)
 		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
 		color2 = GetSVarInt(buf);
 	#endif
-	
+
 	return true;
 }
 
@@ -792,93 +778,10 @@ stock GetVehiclePaintjob(vehicleid)
 	#endif
 }
 
-stock VEH_PutPlayerInVehicle(playerid, vehicleid, seatid)
-{
-	t_PlayerGBug[playerid][gbugEnteringState] = 0;
-
- 	return PutPlayerInVehicle(playerid, vehicleid, seatid);
-}
-
-#if defined _ALS_PutPlayerInVehicle
-	#undef PutPlayerInVehicle
-#else
-	#define _ALS_PutPlayerInVehicle
-#endif
-#define PutPlayerInVehicle VEH_PutPlayerInVehicle
-
-public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
-{
-	if (! ispassenger || t_PlayerGBug[playerid][gbugEnteringState] != 0)
-	{
-		return 1;
-  	}
-
-	t_PlayerGBug[playerid][gbugLastTick] = GetTickCount();
-
- 	GetPlayerPos(playerid, t_PlayerGBug[playerid][gbugPlayerPos][0], t_PlayerGBug[playerid][gbugPlayerPos][1], t_PlayerGBug[playerid][gbugPlayerPos][2]);
-    GetVehiclePos(vehicleid, t_PlayerGBug[playerid][gbugVehiclePos][0], t_PlayerGBug[playerid][gbugVehiclePos][1], t_PlayerGBug[playerid][gbugVehiclePos][2]);
-
-	t_PlayerGBug[playerid][gbugEnteringState] = 1;
-
-    #if defined VEH_OnPlayerEnterVehicle
-		return VEH_OnPlayerEnterVehicle(playerid, vehicleid, ispassenger);
-	#else
-		return 1;
-	#endif
-}
-#if defined _ALS_OnPlayerEnterVehicle
-	#undef OnPlayerEnterVehicle
-#else
-	#define _ALS_OnPlayerEnterVehicle
-#endif
-#define OnPlayerEnterVehicle VEH_OnPlayerEnterVehicle
-#if defined VEH_OnPlayerEnterVehicle
-	forward VEH_OnPlayerEnterVehicle(playerid, vehicleid, ispassenger);
-#endif
-
-public OnPlayerConnect(playerid)
-{
-	if (GetPVarType(playerid, "VEH_Update") == PLAYER_VARTYPE_NONE)
-	{
-	    t_OnPlayerUpdate = true;
-	    SetPVarInt(playerid, "VEH_Update", 1);
-	}
-	else
-	{
-	    t_OnPlayerUpdate = false;
-	}
-
-    #if defined VEH_OnPlayerConnect
-		return VEH_OnPlayerConnect(playerid);
-	#else
-		return 1;
-	#endif
-}
-#if defined _ALS_OnPlayerConnect
-	#undef OnPlayerConnect
-#else
-	#define _ALS_OnPlayerConnect
-#endif
-#define OnPlayerConnect VEH_OnPlayerConnect
-#if defined VEH_OnPlayerConnect
-	forward VEH_OnPlayerConnect(playerid);
-#endif
-
 public OnPlayerStateChange(playerid, newstate, oldstate)
 {
 	if (newstate == PLAYER_STATE_DRIVER)
     {
-    	if ((t_PlayerGBug[playerid][gbugEnteringState] == 1 || t_PlayerGBug[playerid][gbugEnteringState] == 2) && GetVehicleDistanceFromPoint(GetPlayerVehicleID(playerid), t_PlayerGBug[playerid][gbugVehiclePos][0], t_PlayerGBug[playerid][gbugVehiclePos][1], t_PlayerGBug[playerid][gbugVehiclePos][2]) > 2.0)
-        {
-        	SetPlayerPos(playerid, t_PlayerGBug[playerid][gbugPlayerPos][0], t_PlayerGBug[playerid][gbugPlayerPos][1], t_PlayerGBug[playerid][gbugPlayerPos][2]);
-
-			t_PlayerGBug[playerid][gbugEnteringState] = 0;
-		}
-        else
-        {
-        	t_PlayerGBug[playerid][gbugEnteringState] = 0;
-        }
-
         new
             modelid = GetVehicleModel(GetPlayerVehicleID(playerid))
         ;
@@ -904,78 +807,6 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 	forward VEH_OnPlayerStateChange(playerid, newstate, oldstate);
 #endif
 
-public OnPlayerUpdate(playerid)
-{
-	if (t_OnPlayerUpdate)
-	{
-	    if (GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_ENTER_VEHICLE && t_PlayerGBug[playerid][gbugEnteringState] == 0)
-        {
-        	t_PlayerGBug[playerid][gbugLastTick] = GetTickCount();
-
-         	GetPlayerPos(playerid, t_PlayerGBug[playerid][gbugPlayerPos][0], t_PlayerGBug[playerid][gbugPlayerPos][1], t_PlayerGBug[playerid][gbugPlayerPos][2]);
-
-			t_PlayerGBug[playerid][gbugEnteringState] = 1;
-        }
-        else if (t_PlayerGBug[playerid][gbugEnteringState] != 0)
-        {
-	        if (GetPlayerSpecialAction(playerid) != SPECIAL_ACTION_ENTER_VEHICLE && t_PlayerGBug[playerid][gbugEnteringState] != 3 && GetTickCount() - t_PlayerGBug[playerid][gbugLastTick] > 320)
-	        {
-	         	t_PlayerGBug[playerid][gbugEnteringState] = 0;
-	        }
-			else if (t_PlayerGBug[playerid][gbugEnteringState] == 3 && GetPlayerSpecialAction(playerid) != SPECIAL_ACTION_ENTER_VEHICLE)
-	        {
-	         	t_PlayerGBug[playerid][gbugEnteringState] = 0;
-	        }
-			else
-			{
-		        new
-					Float:x,
-					Float:y,
-					Float:z
-				;
-		        GetPlayerVelocity(playerid, x, y, z);
-		        if (x == 0 && y == 0 && z == 0)
-		        {
-		        	if (t_PlayerGBug[playerid][gbugEnteringState] != 3)
-		            {
-		            	if (GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_ENTER_VEHICLE && GetTickCount() - t_PlayerGBug[playerid][gbugLastTick] > 320)
-		                {
-		                 	if (t_PlayerGBug[playerid][gbugEnteringState] == 2)
-		                    {
-		                    	t_PlayerGBug[playerid][gbugEnteringState] = 3;
-		                    }
-		                    else
-		                   	{
-		                       	t_PlayerGBug[playerid][gbugEnteringState] = 2;
-                          		t_PlayerGBug[playerid][gbugLastTick] = GetTickCount();
-		                    }
-						}
-		               	else if (GetTickCount()-t_PlayerGBug[playerid][gbugLastTick] > 320)
-		                {
-		                 	t_PlayerGBug[playerid][gbugEnteringState] = 0;
-		                }
-      				}
-		        }
-			}
-	    }
-    }
-
-    #if defined VEH_OnPlayerUpdate
-		return VEH_OnPlayerUpdate(playerid);
-	#else
-		return 1;
-	#endif
-}
-#if defined _ALS_OnPlayerUpdate
-   #undef OnPlayerUpdate
-#else
-    #define _ALS_OnPlayerUpdate
-#endif
-#define OnPlayerUpdate VEH_OnPlayerUpdate
-#if defined VEH_OnPlayerUpdate
-	forward VEH_OnPlayerUpdate(playerid);
-#endif
-
 public OnVehiclePaintjob(playerid, vehicleid, paintjobid)
 {
 	#if defined SAMP_FIXER_SINGLES
@@ -987,7 +818,7 @@ public OnVehiclePaintjob(playerid, vehicleid, paintjobid)
 		format(buf, sizeof(buf), "vehicle%i_paintjob", vehicleid);
 		SetSVarInt(buf, paintjobid);
 	#endif
-	
+
     #if defined VEH_OnVehiclePaintjob
         return VEH_OnVehiclePaintjob(playerid, vehicleid, paintjobid);
     #else
@@ -1044,7 +875,7 @@ public OnVehicleRespray(playerid, vehicleid, color1, color2)
 		format(buf, sizeof(buf), "vehicle%i_color2", vehicleid);
 		SetSVarInt(buf, color2);
 	#endif
-	
+
     #if defined VEH_OnVehicleRespray
         return VEH_OnVehicleRespray(playerid, vehicleid, color1, color2);
     #else
