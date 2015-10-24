@@ -708,7 +708,7 @@ public OnVehicleDamageStatusUpdate(vehicleid, playerid)
 	}
 
 	#if defined S_OnVehicleDamageStatusUpdate
-		return S_OnVehicleDamageStatusUpdate(playerid);
+		return S_OnVehicleDamageStatusUpdate(vehicleid, playerid);
 	#else
 		return 1;
 	#endif
@@ -720,7 +720,7 @@ public OnVehicleDamageStatusUpdate(vehicleid, playerid)
 #endif
 #define OnVehicleDamageStatusUpdate S_OnVehicleDamageStatusUpdate
 #if defined S_OnVehicleDamageStatusUpdate
-	forward S_OnVehicleDamageStatusUpdate(playerid);
+	forward S_OnVehicleDamageStatusUpdate(vehicleid, playerid);
 #endif
 
 public OnPlayerUpdate(playerid)
