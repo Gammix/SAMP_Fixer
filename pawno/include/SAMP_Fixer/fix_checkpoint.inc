@@ -31,7 +31,7 @@
  * SOLUTION: 	Call DisablePlayerRaceCheckpoint before setting a new race checkpoint.
  *
  */
- 
+
 #if defined SAMP_FIXER_SINGLES
 	static
 		t_PlayerCPTimer[MAX_PLAYERS][2]
@@ -70,7 +70,7 @@ public 	FIX_OnCheckpointSet(playerid, type, Float:x, Float:y, Float:z, Float:siz
 	{
 	    SetPlayerRaceCheckpoint(playerid, type, x, y, z, nextx, nexty, nextz, size);
 	}
-	
+
 	#if defined SAMP_FIXER_SINGLES
 	    if (type == -1)
 	    {
@@ -105,11 +105,11 @@ stock FIX_SetPlayerCheckpoint(playerid, Float:x, Float:y, Float:z, Float:size)
 	#else
         if (GetPVarType(playerid, "PlayerCPTimer") != PLAYER_VARTYPE_NONE)
         {
-            KillTimer(GetPvarInt(playerid, "PlayerCPTimer"));
+            KillTimer(GetPVarInt(playerid, "PlayerCPTimer"));
         }
-        SetPvarInt(playerid, "PlayerCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, -1, x, y, z, size, 0.0, 0.0, 0.0));
+        SetPVarInt(playerid, "PlayerCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, -1, x, y, z, size, 0.0, 0.0, 0.0));
 	#endif
-	
+
 	return true;
 }
 #if defined _ALS_SetPlayerCheckpoint
@@ -133,11 +133,11 @@ stock FIX_SetPlayerRaceCheckpoint(playerid, type, Float:x, Float:y, Float:z, Flo
 	#else
         if (GetPVarType(playerid, "PlayerRCPTimer") != PLAYER_VARTYPE_NONE)
         {
-            KillTimer(GetPvarInt(playerid, "PlayerRCPTimer"));
+            KillTimer(GetPVarInt(playerid, "PlayerRCPTimer"));
         }
-        SetPvarInt(playerid, "PlayerRCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, type, x, y, z, size, nextx, nexty, nextz));
+        SetPVarInt(playerid, "PlayerRCPTimer", SetTimerEx("FIX_OnCheckpointSet", 250, false, "iifffffff", playerid, type, x, y, z, size, nextx, nexty, nextz));
 	#endif
-	
+
 	return true;
 }
 #if defined _ALS_SetPlayerRaceCheckpoint
