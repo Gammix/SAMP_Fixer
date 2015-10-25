@@ -17,10 +17,12 @@
  * FIX:			GetTickCount
  * PROBLEM:  	GetTickCount will cause problems on servers with uptime of over 24 days.
  * SOLUTION: 	Add 2147483647 to the original tick count when the value is negative.
+ * CREDITS:		KHKKhalid
  *
  * FIX:			tickcount
  * PROBLEM:  	tickcount will cause problems on servers with uptime of over 24 days.
  * SOLUTION: 	Add 2147483647 to the original tick count when the value is negative.
+ * CREDITS:		KHKKhalid
  *
  */
 
