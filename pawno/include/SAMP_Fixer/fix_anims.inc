@@ -17,10 +17,12 @@
  * FIX:			ApplyAnimation
  * PROBLEM:  	Crashes when invalid library passed in. Rapid executions may cause a crash as well.
  * SOLUTION: 	Validity check for animlibs and last execution check to prevent crash.
+ * CREDITS:		Gammix
  *
  * ADD:			Preload Anims
  * PROBLEM:  	Animations require to be preloaded once before applying.
  * SOLUTION: 	Preload all animations under OnPlayerSpawn (once only).
+ * CREDITS:		Gammix
  *
  */
 
