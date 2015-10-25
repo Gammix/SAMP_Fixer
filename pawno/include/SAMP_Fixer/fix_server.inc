@@ -27,7 +27,7 @@
  * FIX:			AllowInteriorWeapons
  * PROBLEM:  	Does nothing, players can still use weapons in interiors.
  * SOLUTION:  	Reset player armed weapon to 0 under OnPlayerUpdate, when interior is not 0.
- * CREDITS:		KoczkaHUN/Gammix
+ * CREDITS:		KoczkaHUN
  *
  * FIX:			AllowAdminTeleport
  * PROBLEM:  	Function was removed in previous version(s).
