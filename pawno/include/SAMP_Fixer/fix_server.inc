@@ -39,7 +39,7 @@
  * SOLUTION:  	Add support for it back.
  * CREDITS:		Gammix
  *
- * ADD:			EnableVehicleFriendlyFire
+ * FIX:			EnableVehicleFriendlyFire
  * INFO:  		Teammates are still able to pop friendly vehicle tires.
  * SOLUTION:  	Return 0 under OnPlayerWeaponShot.
  * CREDITS:		Gammix
