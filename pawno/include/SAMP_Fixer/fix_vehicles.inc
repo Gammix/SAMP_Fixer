@@ -17,26 +17,33 @@
  * FIX:			Hydra sniper
  * PROBLEM:  	When entering a hydra aircraft with sniper rifle, it disturbs the view/camera.
  * SOLUTION:    Set player armed to 0, fist.
+ * CREDITS:		funky1234
  *
  * FIX:         Restore vehicle properties
  * PROBLEM:  	Vehicles don't get paintjob and color back after destroy.
  * SOLUTION:  	Restore vehicle paintjob and color ids under OnVehicleSpawn.
+ * CREDITS:		Gammix
  *
  * FIX:         Anti illegal mods
  * PROBLEM:  	Server can crash when illegal mods are used by hackers.
  * SOLUTION:  	Add check against illegal mods under OnVehicleMod.
+ * CREDITS:		JernejL/Gammix
  *
  * ADD:			CreateVehicle/AddStaticVehicle/AddStaticVehicleEx
  * INFO:  		Adds random color option when "color1" and "color2" params are set to -1.
+ * CREDITS:		Emmet_/Gammix
  *
  * ADD:			GetVehicleInterior(vehicleid);
  * INFO:  		Gets the vehicle interior id.
+ * CREDITS:		Gammix
  *
  * ADD:			GetVehicleColor(vehicleid, &color1, &color2);
  * INFO:  		Get vehicle color ids, both color1 and color2.
+ * CREDITS:		Gammix
  *
  * ADD:			GetVehiclePaintjob(vehicleid);
  * INFO:  		Get vehicle paintjob id.
+ * CREDITS:		Gammix
  *
  */
 
