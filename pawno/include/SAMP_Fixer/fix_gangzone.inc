@@ -17,9 +17,11 @@
  * FIX:			GangZoneCreate
  * PROBLEM:  	Gangzones at certain angles show deviations or have disturbed position.
  * SOLUTION: 	Roundoff the gangzone positions.
+ * CREDITS:		xX_Simon_Xx/Y_Less
  *
  * ADD:			IsValidGangZone(zone);
  * INFO:  		By default, this function doesn't exist. Lets you identify if the gangzone is existing or not.
+ * CREDITS:		Gammix
  *
  */
 
