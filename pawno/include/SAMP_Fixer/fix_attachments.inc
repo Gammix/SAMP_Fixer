@@ -17,13 +17,16 @@
  * FIX:			SetPlayerAttachedObject
  * PROBLEM:  	The attached objects hovers the camera while zooming with certain weapons like Sniper rifle, RPG etc.
  * SOLUTION: 	Temporarily remove player attached objects while player is in zooming session.
+ * CREDITS:		Gammix
  *
  * FIX:			Destroy attached objects
  * PROBLEM:  	The attached objects doesn't get auto destroy when player disconnects.
  * SOLUTION: 	Destroy them under OnPlayerDisconnect.
+ * CREDITS:		Gammix
  *
  * ADD:         GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX, &Float:fOffsetY, &Float:fOffsetZ, &Float:fRotX, &Float:fRotY, &Float:fRotZ, &Float:fScaleX, &Float:fScaleY, &Float:fScaleZ, &materialcolor1, &materialcolor2);
  * INFO:  		You can read all attachement info. by specifing the index into the stock.
+ * CREDITS:		Gammix
  *
  */
 
