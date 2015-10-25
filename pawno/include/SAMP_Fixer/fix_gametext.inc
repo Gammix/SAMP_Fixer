@@ -17,9 +17,11 @@
  * FIX:			GameTextForPlayer/GameTextForAll
  * PROBLEM:  	Few game text styles have a static timer which ignores "time" set in the native.
  * SOLUTION: 	Use custom textdraws for gametexts, allows to have a dynamic timer and custom colours.
+ * CREDITS:		Gammix
  *
  * ADD:         GameTextForPlayer/GameTextForAll
  * INFO:        Adds new param "color" which allows you to have custom gametext color (hex)
+ * CREDITS:		Gammix
  *
  */
 
