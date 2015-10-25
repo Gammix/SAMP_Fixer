@@ -25,8 +25,8 @@ There are 15 branches of this librarby:
  * fix_tickcount
  * fix_vehicles [IMPORTANT]
 
-## Why to use this?
-There are few reasons why fixes is insecure or not that good to use, firstly there is silent kick which can be causing trouble (as far i have experienced), the include sometimes causes random kicks or crashes. Secondly there are few better methods to perform or fix some natives, the code has completely ran into complexity. The SAMP Fixer library has few more areas which fixes.inc doesn't cover. And last but not the least, the timer fix plugin (fixes plugin) is still buggy. I have experienced time difference till yet.
+## Introduction
+This library is developed to fix bugs, crashes and problems faced in game. I am not the only developer of this but have got various hands, its considered as a community patch for buggy SA-MP functions and features.
 
 ## How to use?
 Include this just after `#include <a_samp>`.
