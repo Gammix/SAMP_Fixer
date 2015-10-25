@@ -1,5 +1,5 @@
-# SAMP_Fixer `Build 2`
-Community patch for buggy SA:MP functions and glitches experienced in game.
+# SAMP_Fixer `Build 3`
+This library is developed to fix bugs, crashes and problems faced in game. I am not the only developer of this but have got various hands, its considered as a community patch for buggy SA-MP functions and features.
 
 ## Requirements
 Latest SA-MP update only: http://forum.sa-mp.com/showthread.php?t=581259
@@ -24,9 +24,6 @@ There are 15 branches of this librarby:
  * fix_tildes [IMPORTANT]
  * fix_tickcount
  * fix_vehicles [IMPORTANT]
-
-## Introduction
-This library is developed to fix bugs, crashes and problems faced in game. I am not the only developer of this but have got various hands, its considered as a community patch for buggy SA-MP functions and features.
 
 ## How to use?
 Include this just after `#include <a_samp>`.
