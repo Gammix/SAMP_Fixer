@@ -34,6 +34,10 @@
  * PROBLEM:  	Function was removed in previous version(s).
  * SOLUTION:  	Add support for it back.
  *
+ * ADD:			EnableVehicleFriendlyFire
+ * INFO:  		Teammates are still able to pop friendly vehicle tires.
+ * SOLUTION:  	Return 0 under OnPlayerWeaponShot.
+ *
  * ADD:			EnableVehicleNames(toggle);
  * INFO:  		Show vehicle names when player enters one, singleplayer feature.
  *
@@ -47,6 +51,7 @@ enum e_TRIGGER_FEATURES_DATA
 	TRIGGER_INTERIOR_WEAPONS,
 	TRIGGER_ADMIN_TELEPORT,
 	TRIGGER_ZONE_NAMES,
+	TRIGGER_VEHICLE_FRIENDLYFIRE,
 	TRIGGER_VEHICLE_NAMES
 };
 
@@ -68,11 +73,11 @@ enum e_PLAYERTEXT_FADE_DATA
 };
 
 static
-				t_TriggerFeature[15],
+	bool:		t_TriggerFeature[e_TRIGGER_FEATURES_DATA],
 	Float:  	t_PlayerLastPos[MAX_PLAYERS][3],
 				t_PlayerLastGPS[MAX_PLAYERS][2],
-	PlayerText: t_PlayerZoneTxt[MAX_PLAYERS],
-	PlayerText: t_PlayerVehicleTxt[MAX_PLAYERS],
+	PlayerText: t_PlayerZoneTxt[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, ...},
+	PlayerText: t_PlayerVehicleTxt[MAX_PLAYERS] = {PlayerText:INVALID_TEXT_DRAW, ...},
 	            t_PlayerZoneTxtFade[MAX_PLAYERS][e_PLAYERTEXT_FADE_DATA],
 	            t_PlayerVehicleTxtFade[MAX_PLAYERS][e_PLAYERTEXT_FADE_DATA]
 ;
@@ -526,7 +531,7 @@ stock FIX_GetWeaponName(weaponid, weapon[], len)
 
 stock S_EnableTirePopping(toggle)
 {
-    t_TriggerFeature[TRIGGER_TIRE_POPPING] = toggle;
+    t_TriggerFeature[TRIGGER_TIRE_POPPING] = bool:toggle;
 
 	return true;
 }
@@ -540,7 +545,7 @@ stock S_EnableTirePopping(toggle)
 
 stock S_AllowInteriorWeapons(toggle)
 {
-    t_TriggerFeature[TRIGGER_INTERIOR_WEAPONS] = toggle;
+    t_TriggerFeature[TRIGGER_INTERIOR_WEAPONS] = bool:toggle;
 
     return true;
 }
@@ -554,7 +559,7 @@ stock S_AllowInteriorWeapons(toggle)
 
 stock S_AllowAdminTeleport(toggle)
 {
-    t_TriggerFeature[TRIGGER_ADMIN_TELEPORT] = toggle;
+    t_TriggerFeature[TRIGGER_ADMIN_TELEPORT] = bool:toggle;
 
     return true;
 }
@@ -568,7 +573,7 @@ stock S_AllowAdminTeleport(toggle)
 
 stock S_EnableZoneNames(toggle)
 {
-    t_TriggerFeature[TRIGGER_ZONE_NAMES] = toggle;
+    t_TriggerFeature[TRIGGER_ZONE_NAMES] = bool:toggle;
 
     return true;
 }
@@ -580,9 +585,23 @@ stock S_EnableZoneNames(toggle)
 #endif
 #define EnableZoneNames S_EnableZoneNames
 
+stock S_EnableVehicleFriendlyFire(toggle)
+{
+    t_TriggerFeature[TRIGGER_VEHICLE_FRIENDLYFIRE] = bool:toggle;
+
+    return true;
+}
+#if defined _ALS_EnableVehicleFriendlyFire
+	#undef EnableVehicleFriendlyFire
+#else
+	native BAD_EnableVehicleFriendlyFire(toggle) = EnableVehicleFriendlyFire;
+	#define _ALS_EnableVehicleFriendlyFire
+#endif
+#define EnableVehicleFriendlyFire S_EnableVehicleFriendlyFire
+
 stock EnableVehicleNames(toggle)
 {
-    t_TriggerFeature[TRIGGER_ZONE_NAMES] = toggle;
+    t_TriggerFeature[TRIGGER_ZONE_NAMES] = bool:toggle;
 
     return true;
 }
@@ -690,6 +709,41 @@ public OnPlayerConnect(playerid)
 	forward S_OnPlayerConnect(playerid);
 #endif
 
+public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+{
+	if (t_TriggerFeature[TRIGGER_VEHICLE_FRIENDLYFIRE])
+	{
+	    if (hittype == BULLET_HIT_TYPE_VEHICLE)
+	    {
+		    if (GetPlayerTeam(playerid) != NO_TEAM)
+		    {
+		        for (new i, j = GetPlayerPoolSize(); i <= j; i++)
+		        {
+		            if (GetPlayerVehicleID(i) == hitid && GetPlayerTeam(playerid) == GetPlayerTeam(i))
+					{
+						return 0;
+		            }
+		        }
+			}
+ 		}
+	}
+	
+    #if defined S_OnPlayerWeaponShot
+		return S_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnPlayerWeaponShot
+	#undef OnPlayerWeaponShot
+#else
+	#define _ALS_OnPlayerWeaponShot
+#endif
+#define OnPlayerWeaponShot S_OnPlayerWeaponShot
+#if defined S_OnPlayerWeaponShot
+	forward S_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
+#endif
+
 public OnVehicleDamageStatusUpdate(vehicleid, playerid)
 {
 	if (! t_TriggerFeature[TRIGGER_TIRE_POPPING])
@@ -706,7 +760,7 @@ public OnVehicleDamageStatusUpdate(vehicleid, playerid)
 
 	    UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
 	}
-
+	
 	#if defined S_OnVehicleDamageStatusUpdate
 		return S_OnVehicleDamageStatusUpdate(vehicleid, playerid);
 	#else
