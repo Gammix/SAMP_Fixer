@@ -17,29 +17,36 @@
  * FIX:			GetWeaponName
  * PROBLEM:  	Doesn't contain names for Fist, Moltove, Night vision, Thermal vision.
  * SOLUTION:  	Add names by hooking the native.
+ * CREDITS:		Gammix
  *
  * FIX:			EnableTirePopping
  * PROBLEM:  	Function was removed in previous version(s).
  * SOLUTION:  	Add support for it back.
+ * CREDITS:		Gammix
  *
  * FIX:			AllowInteriorWeapons
  * PROBLEM:  	Does nothing, players can still use weapons in interiors.
  * SOLUTION:  	Reset player armed weapon to 0 under OnPlayerUpdate, when interior is not 0.
+ * CREDITS:		KoczkaHUN
  *
  * FIX:			AllowAdminTeleport
  * PROBLEM:  	Function was removed in previous version(s).
  * SOLUTION:  	Add support for it back.
+ * CREDITS:		Gammix
  *
  * FIX:			EnableZoneNames
  * PROBLEM:  	Function was removed in previous version(s).
  * SOLUTION:  	Add support for it back.
+ * CREDITS:		Gammix
  *
  * ADD:			EnableVehicleFriendlyFire
  * INFO:  		Teammates are still able to pop friendly vehicle tires.
  * SOLUTION:  	Return 0 under OnPlayerWeaponShot.
+ * CREDITS:		Gammix
  *
  * ADD:			EnableVehicleNames(toggle);
  * INFO:  		Show vehicle names when player enters one, singleplayer feature.
+ * CREDITS:		Gammix
  *
  */
 
