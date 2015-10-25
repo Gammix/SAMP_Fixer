@@ -17,18 +17,22 @@
  * FIX:			IsPlayerInAnyCheckpoint
  * PROBLEM:  	Function returns an undefined value if it is called before any other checkpoint functions are called to initialise the value.
  * SOLUTION: 	Call DisablePlayerCheckpoint when a player connects.
+ * CREDITS:		Y_Less
  *
  * FIX:			IsPlayerInAnyRaceCheckpoint
  * PROBLEM:  	Function returns an undefined value if it is called before any other race checkpoint functions are called to initialise the value.
  * SOLUTION: 	Call DisablePlayerRaceCheckpoint when a player connects.
+ * CREDITS:		Y_Less
  *
  * FIX:			SetPlayerCheckpoint
  * PROBLEM:  	If a checkpoint is already set it will use the size of that checkpoint instead of the new one.
  * SOLUTION: 	Call DisablePlayerCheckpoint before setting a new checkpoint.
+ * CREDITS:		KoczkaHUN
  *
  * FIX:			SetPlayerRaceCheckpoint
  * PROBLEM:  	If a race checkpoint is already set it will use the size of that race checkpoint instead of the new one.
  * SOLUTION: 	Call DisablePlayerRaceCheckpoint before setting a new race checkpoint.
+ * CREDITS:		KoczkaHUN
  *
  */
 
