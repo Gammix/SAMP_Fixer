@@ -585,9 +585,9 @@ stock S_EnableZoneNames(toggle)
 #endif
 #define EnableZoneNames S_EnableZoneNames
 
-stock S_EnableVehicleFriendlyFire(toggle)
+stock S_EnableVehicleFriendlyFire()
 {
-    t_TriggerFeature[TRIGGER_VEHICLE_FRIENDLYFIRE] = bool:toggle;
+    t_TriggerFeature[TRIGGER_VEHICLE_FRIENDLYFIRE] = true;
 
     return true;
 }
