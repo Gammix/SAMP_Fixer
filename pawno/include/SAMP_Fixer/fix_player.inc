@@ -17,46 +17,57 @@
  * FIX:			GetPlayerIp
  * PROBLEM:  	Don't work in OnPlayerDisconnect.
  * SOLUTION:  	Store player ip. under OnPlayerConnect.
+ * CREDITS:		Gammix
  *
  * FIX:			GetPlayerColor
  * PROBLEM:  	Returns an invalid value when used before SetPlayerColor.
  * SOLUTION:  	Set player random color under OnPlayerConnect.
+ * CREDITS:		KoczkaHUN
  *
  * FIX:			TogglePlayerSpectating
  * PROBLEM:  	Causes camera bug when used for same conditions.
  * SOLUTION:  	Add player state check before setting to spectate screen.
+ * CREDITS:		Gammix
  *
  * FIX:			ClearAnimations
  * PROBLEM:  	Use ClearAnimation while you are in a vehicle cause the player exit from it.
  * SOLUTION:  	Apply an animation instead of clear animation.
+ * CREDITS:		xX_Simon_Xx
  *
  * FIX:			TogglePlayerControllable
  * PROBLEM:  	Sometimes player see you moving when freezed.
  * SOLUTION:  	Clear animations before freezing a player.
+ * CREDITS:		Gammix
  *
  * FIX:			PutPlayerInVehicle
  * PROBLEM:  	If this is used on a passenger the driver of their old vehicle doesn't see them in their new vehicle.
  * SOLUTION:  	Remove the player from the vehicle first.
+ * CREDITS:		leong124/Y_Less
  *
  * FIX:			SpawnPlayer
  * PROBLEM:  	When player is in vehicle, he/she is killed.
  * SOLUTION:  	Remove the player from the vehicle first.
+ * CREDITS:		Y_Less/Gammix
  *
  * FIX:			SetPlayerName
  * PROBLEM:  	Doesn't work when the newname is different only in case with the old name.
  * SOLUTION:  	Use SetPlayerName twice in case sensitive cases.
+ * CREDITS:		Y_Less/Gammix
  *
  * FIX:			SetPlayerSkin
  * PROBLEM:     When used in vehicles, causes positioning bug.
  * SOLUTION:  	Temporarily eject player, set skin and put back into vehicle.
+ * CREDITS:		Y_Less/Gammix
  *
  * FIX:			GetPlayerSkin
  * PROBLEM:     Returns the new skin after "SetSpawnInfo" is called but before the player actually respawns to get the new skin.
  * SOLUTION:  	Use PVar to record the skin and return it instead from the native.
+ * CREDITS:		Y_Less/Gammix
  *
  * FIX:			SetPlayerSpecialAction
  * PROBLEM:     Removing jetpacks from players by setting their special action to 0 causes the sound to stay until death.
  * SOLUTION:  	Clear animations before remove jetpack.
+ * CREDITS:		Y_Less
  *
  */
 
