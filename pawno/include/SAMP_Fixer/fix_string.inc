@@ -17,14 +17,17 @@
  * FIX:			strins
  * PROBLEM:  	Ignores the "maxlength" parameter causing possible crashes.
  * SOLUTION:   	Manually check the length.
+ * CREDITS:		Slice/Y_Less
  *
  * FIX:         valstr
  * PROBLEM:  	Crashes on large numbers.
  * SOLUTION:  	Use "format" instead.
+ * CREDITS:		Slice
  *
  * FIX:         strcmp
  * PROBLEM:  	Return 0 if anyone of the string is empty.
  * SOLUTION:  	Return 1 if the 1 string is empty and second is not.
+ * CREDITS:		Gammix
  *
  */
 
