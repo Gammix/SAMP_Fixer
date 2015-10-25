@@ -1,4 +1,4 @@
-# SAMP_Fixer `Build 2`
+# SAMP_Fixer `Build 3`
 This library is developed to fix bugs, crashes and problems faced in game. I am not the only developer of this but have got various hands, its considered as a community patch for buggy SA-MP functions and features.
 
 ## Requirements
