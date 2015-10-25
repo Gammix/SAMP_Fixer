@@ -17,14 +17,17 @@
  * FIX:			Textdraw/Gametext blank
  * PROBLEM:  	When the string of textdaws/gametexts is set to "", the server crashes.
  * SOLUTION: 	Check if the string's 0th element is 'EOS' and replace it with " ".
+ * CREDITS:		TomTrox
  *
  * FIX:			Uneven '~'s
  * PROBLEM:  	Manier times when you have uneven '~'s or placed them wrong, the server crashes.
  * SOLUTION: 	Add a check before setting the string of textdraws/gametexts.
+ * CREDITS:		JernejL/Gammix
  *
  * FIX:			Textdraw/Gametext encoding
  * PROBLEM:  	Sometimes textdraws or gametexts have un identified characters in them.
  * SOLUTION: 	Convert them into identified chars.
+ * CREDITS:		Y_Less/Gammix
  *
  */
 
