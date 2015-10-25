@@ -17,6 +17,7 @@
  * FIX:   		Menu function crashes
  * PROBLEM:   	When an invalid menu is passes through any of the SA-MP file functions, the server crashes.
  * SOLUTION:  	Check if the menu is valid, if not return false.
+ * CREDITS:		Y_Less
  *
  */
 
