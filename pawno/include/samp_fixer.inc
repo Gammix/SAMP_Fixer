@@ -27,23 +27,6 @@
  * fix_tickcount
  * fix_vehicles [IMPORTANT]
  *
- * ============
- * 	AUTHORS/DEVELOPERS
- * ============
- *
- * Gammix
- * SA-MP Community
- * Y_Less
- * Slice
- * xX_Simon_Xx
- * RyDeR`
- * MP2
- * KHKKhalid
- * JernejL
- * KoczkaHUN
- * funky1234
- * wups
- *
 */
 
 #tryinclude "a_samp"
