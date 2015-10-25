@@ -17,14 +17,17 @@
  * FIX:			Kick
  * PROBLEM:  	While kick is executed on a player, other elements such as client messages, dialogs etc. doesn't work.
  * SOLUTION: 	Add delay between the kick final execution. (see "delay" param)
+ * CREDITS:		Gammix
  *
  * FIX:			Ban
  * PROBLEM:  	While ban is executed on a player, other elements such as client messages, dialogs etc. doesn't work.
  * SOLUTION: 	Add delay between the ban final execution. (see "delay" param)
+ * CREDITS:		Gammix
  *
  * FIX:			BanEx
  * PROBLEM:  	While banex is executed on a player, other elements such as client messages, dialogs etc. doesn't work.
  * SOLUTION: 	Add delay between the banex final execution. (see "delay" param)
+ * CREDITS:		Gammix
  *
  */
 
