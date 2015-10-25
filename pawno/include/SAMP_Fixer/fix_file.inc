@@ -17,6 +17,7 @@
  * FIX:			File function crashes
  * PROBLEM:  	When an invalid file is or handle is passes through any of the SA-MP file functions, the server crashes.
  * SOLUTION:  	Check if the file is valid, if not return false.
+ * CREDITS:		Y_Less
  *
  */
 
