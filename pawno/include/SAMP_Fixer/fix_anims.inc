@@ -19,7 +19,7 @@
  * SOLUTION: 	Validity check for animlibs and last execution check to prevent crash.
  * CREDITS:		Gammix
  *
- * ADD:			Preload Anims
+ * FIX:			Preload Anims
  * PROBLEM:  	Animations require to be preloaded once before applying.
  * SOLUTION: 	Preload all animations under OnPlayerSpawn (once only).
  * CREDITS:		Gammix
