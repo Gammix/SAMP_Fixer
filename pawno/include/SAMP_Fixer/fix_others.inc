@@ -17,22 +17,27 @@
  * FIX:			KEY_AIM
  * PROBLEM:  	By default this macro isn't defined.
  * SOLUTION:  	Define it.
+ * CREDITS:		Y_Less
  *
  * FIX:			SPECIAL_ACTION_PISSING
  * PROBLEM:  	By default this macro isn't defined.
  * SOLUTION: 	Define it.
+ * CREDITS:		xX_Simon_Xx
  *
  * FIX:			random
  * PROBLEM:  	When passed negative numbers, this native doesn't work.
- * SOLUTION: 	Multiply with "-" to get results
+ * SOLUTION: 	Multiply with "-" to get results.
+ * CREDITS:		xX_Simon_Xx
  *
  * FIX:			IsPlayerConnected
  * PROBLEM:  	The native doesn't mask the numbers.
  * SOLUTION:    Add an additional check.
+ * CREDITS:		Y_Less
  *
  * FIX:			Weapon crasher
  * PROBLEM:  	Illegal weapons and bullets can crash server.
- * SOLUTION:    Detect under OnPlayerWeaponShot and desync when invalid
+ * SOLUTION:    Detect under OnPlayerWeaponShot and desync when invalid.
+ * CREDITS:		JernejL
  *
  */
 
