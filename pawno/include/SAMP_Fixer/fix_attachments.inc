@@ -344,16 +344,16 @@ stock GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX,
 		    bone = GetPVarInt(playerid, buf);
 
 		    format(buf, sizeof(buf), "att%i_offset_x", index);
-		    foffsetX = GetPVarFloat(playerid, buf);
+		    fOffsetX = GetPVarFloat(playerid, buf);
 		    format(buf, sizeof(buf), "att%i_offset_y", index);
-		    foffsetY = GetPVarFloat(playerid, buf);
+		    fOffsetY = GetPVarFloat(playerid, buf);
 		    format(buf, sizeof(buf), "att%i_offset_z", index);
-		    foffsetZ = GetPVarFloat(playerid, buf);
+		    fOffsetZ = GetPVarFloat(playerid, buf);
 
 		    format(buf, sizeof(buf), "att%i_rot_x", index);
 		    fRotX = GetPVarFloat(playerid, buf);
 		    format(buf, sizeof(buf), "att%i_rot_y", index);
-		    fRrotY = GetPVarFloat(playerid, buf);
+		    fRotY = GetPVarFloat(playerid, buf);
 		    format(buf, sizeof(buf), "att%i_rot_z", index);
 		    fRotZ = GetPVarFloat(playerid, buf);
 
@@ -372,10 +372,10 @@ stock GetPlayerAttachedObject(playerid, index, &modelid, &bone, &Float:fOffsetX,
         	return true;
 		}
 	#endif
-    else
-    {
-		return false;
-	}
+	    else
+	    {
+			return false;
+		}
 }
 
 stock ATT_RemovePlayerAttachedObject(playerid, index)
