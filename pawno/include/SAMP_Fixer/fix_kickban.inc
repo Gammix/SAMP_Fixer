@@ -155,7 +155,7 @@ public OnPlayerDisconnect(playerid, reason)
 	{
 		KillTimer(t_DelayKB[playerid][kbTimer]);
 		t_DelayKB[playerid][kbTimer] = -1;
-		
+
 		OnPlayerDelayKicked(playerid);
 	}
 
@@ -254,10 +254,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	#if defined KB_OnDialogResponse
 		return KB_OnDialogResponse(playerid, dialogid, response, listitem, inputtext);
 	#else
-		return 0;
+		return 1;
 	#endif
 }
-
 #if defined _ALS_OnDialogResponse
 	#undef OnDialogResponse
 #else
