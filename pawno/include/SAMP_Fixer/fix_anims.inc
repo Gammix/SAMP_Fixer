@@ -21,7 +21,7 @@
  *
  * FIX:			Preload Anims
  * PROBLEM:  	Animations require to be preloaded once before applying.
- * SOLUTION: 	Preload all animations under OnPlayerSpawn (once only).
+ * SOLUTION: 	Preload the animation using a timer under ApplyAnimation (once).
  * CREDITS:		Gammix
  *
  */
