@@ -26,6 +26,7 @@
  * fix_tildes [IMPORTANT]
  * fix_tickcount
  * fix_vehicles [IMPORTANT]
+ * fix_lagcomp [IMPORTANT]
  *
 */
 
@@ -46,6 +47,7 @@
 #include "SAMP_Fixer/fix_tickcount"
 #include "SAMP_Fixer/fix_tildes"
 #include "SAMP_Fixer/fix_vehicles"
+#include "SAMP_Fixer/fix_lagcomp"
 
 public OnGameModeInit()
 {
