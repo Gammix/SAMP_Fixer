@@ -1,4 +1,4 @@
-# SAMP_Fixer `Build 4`
+# SAMP_Fixer `Build 5`
 This library is developed to fix bugs, crashes and problems faced in game. I am not the only developer of this but have got various hands, its considered as a community patch for buggy SA-MP functions and features.
 
 ## Requirements
@@ -8,7 +8,7 @@ Latest SA-MP update only: http://forum.sa-mp.com/showthread.php?t=581259
 http://forum.sa-mp.com/showthread.php?t=591458
 
 ## Library structure
-There are 15 branches of this librarby:
+There are 16 branches of this librarby:
  * fix_anims [IMPORTANT]
  * fix_attachments [IMPORTANT]
  * fix_checkpoint
@@ -24,6 +24,7 @@ There are 15 branches of this librarby:
  * fix_tildes [IMPORTANT]
  * fix_tickcount
  * fix_vehicles [IMPORTANT]
+ * fix_lagcomp [IMPORTANT]
 
 ## How to use?
 Include this just after `#include <a_samp>`.
