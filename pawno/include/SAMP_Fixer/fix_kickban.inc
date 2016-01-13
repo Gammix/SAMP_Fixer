@@ -42,6 +42,29 @@ static
 	t_DelayKB[MAX_PLAYERS][e_KICKBAN_DATA]
 ;
 
+stock FIX_Kick(playerid, delay = 150)
+{
+	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
+	{
+		return false;
+	}
+
+	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, t_DelayKB[playerid][kbTimer]);
+	
+	t_DelayKB[playerid][kbType] = 0;
+	t_DelayKB[playerid][kbReason][0] = EOS;
+
+	return true;
+}
+#if defined _ALS_Kick
+	#undef Kick
+#else
+	native BAD_Kick(playerid) = Kick;
+	#define _ALS_Kick
+#endif
+#define Kick FIX_Kick
+
 forward OnPlayerDelayKicked(playerid);
 public	OnPlayerDelayKicked(playerid)
 {
@@ -64,26 +87,11 @@ public	OnPlayerDelayKicked(playerid)
 	}
 }
 
-stock FIX_Kick(playerid, delay = 150)
+forward OnPlayerDelayKickProcessed(playerid, i);
+public  OnPlayerDelayKickProcessed(playerid, i)
 {
-	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
-	{
-		return false;
-	}
-
-	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
-	t_DelayKB[playerid][kbType] = 0;
-	t_DelayKB[playerid][kbReason][0] = EOS;
-
-	return true;
+    t_DelayKB[playerid][kbTimer] = i;
 }
-#if defined _ALS_Kick
-	#undef Kick
-#else
-	native BAD_Kick(playerid) = Kick;
-	#define _ALS_Kick
-#endif
-#define Kick FIX_Kick
 
 stock FIX_Ban(playerid, delay = 150)
 {
