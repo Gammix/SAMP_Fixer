@@ -24,11 +24,6 @@
  * SOLUTION:  	Set player random color under OnPlayerConnect.
  * CREDITS:		KoczkaHUN
  *
- * FIX:			TogglePlayerSpectating
- * PROBLEM:  	Causes camera bug when used for same conditions.
- * SOLUTION:  	Add player state check before setting to spectate screen.
- * CREDITS:		Gammix
- *
  * FIX:			ClearAnimations
  * PROBLEM:  	Use ClearAnimation while you are in a vehicle cause the player exit from it.
  * SOLUTION:  	Apply an animation instead of clear animation.
@@ -99,11 +94,9 @@ static const t_SetPlayerColor[100] =
 	0xCF72A9FF, 0xE59338FF, 0xEEDC2DFF, 0xD8C762FF, 0xD8C762FF
 };
 
-#if defined SAMP_FIXER_SINGLES
-	static
-	    t_PlayerSkin[MAX_PLAYERS]
-	;
-#endif
+static
+	t_PlayerSkin[MAX_PLAYERS]
+;
 
 public OnPlayerConnect(playerid)
 {
@@ -129,12 +122,8 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerSpawn(playerid)
 {
-	#if defined SAMP_FIXER_SINGLES
-	    t_PlayerSkin[playerid] = GetPlayerSkin(playerid);
-	#else
-		SetPVarInt(playerid, "FIX_GetPlayerSkin", GetPlayerSkin(playerid));
-	#endif
-	
+	t_PlayerSkin[playerid] = GetPlayerSkin(playerid);
+
     #if defined PLAYER_OnPlayerSpawn
 		return PLAYER_OnPlayerSpawn(playerid);
 	#else
@@ -151,45 +140,18 @@ public OnPlayerSpawn(playerid)
 	forward PLAYER_OnPlayerSpawn(playerid);
 #endif
 
-stock FIX_GetPlayerIp(playerid, name[], len)
+stock FIX_GetPlayerIp(playerid, ip[], len)
 {
-	name[0] = EOS;
-	return strcat(name, t_PlayerIP[playerid], len);
+	ip[0] = EOS;
+	return strcat(ip, t_PlayerIP[playerid], len);
 }
 #if defined _ALS_GetPlayerIp
 	#undef GetPlayerIp
 #else
-	native BAD_GetPlayerIp(playerid, name[], len) = GetPlayerIp;
+	native BAD_GetPlayerIp(playerid, ip[], len) = GetPlayerIp;
 	#define _ALS_GetPlayerIp
 #endif
 #define GetPlayerIp FIX_GetPlayerIp
-
-stock FIX_TogglePlayerSpectating(playerid, set)
-{
-	if (set)
-	{
-		if (GetPlayerState(playerid) != PLAYER_STATE_SPECTATING)
-		{
-		    return TogglePlayerSpectating(playerid, true);
-		}
-	}
-	else
-	{
-		if (GetPlayerState(playerid) == PLAYER_STATE_SPECTATING)
-		{
-		    return TogglePlayerSpectating(playerid, false);
-		}
-	}
-
-	return false;
-}
-#if defined _ALS_TogglePlayerSpectating
-    #undef TogglePlayerSpectating
-#else
-	native BAD_TogglePlayerSpectating(playerid, set) = TogglePlayerSpectating;
-    #define _ALS_TogglePlayerSpectating
-#endif
-#define TogglePlayerSpectating FIX_TogglePlayerSpectating
 
 stock FIX_ClearAnimations(playerid, forcesync = 0)
 {
@@ -324,12 +286,8 @@ stock FIX_SetPlayerSkin(playerid, skinid)
 		SetPlayerPos(playerid, x, y, z);
 
 		ret = SetPlayerSkin(playerid, skinid);
-		
-		#if defined SAMP_FIXER_SINGLES
-		    t_PlayerSkin[playerid] = skinid;
-		#else
-			SetPVarInt(playerid, "FIX_GetPlayerSkin", skinid);
-		#endif
+
+		CallRemoteFunction("OnPlayerSkinSet", "ii", playerid, skinid);
 
 		PutPlayerInVehicle(playerid, vehicleid, seatid);
 
@@ -346,13 +304,15 @@ stock FIX_SetPlayerSkin(playerid, skinid)
 #endif
 #define SetPlayerSkin FIX_SetPlayerSkin
 
+forward OnPlayerSkinSet(playerid, skinid);
+public  OnPlayerSkinSet(playerid, skinid)
+{
+	t_PlayerSkin[playerid] = skinid;
+}
+
 stock FIX_GetPlayerSkin(playerid)
 {
-	#if defined SAMP_FIXER_SINGLES
-	    return t_PlayerSkin[playerid];
-	#else
-		return GetPVarInt(playerid, "FIX_GetPlayerSkin");
-	#endif
+	return t_PlayerSkin[playerid];
 }
 #if defined _ALS_GetPlayerSkin
 	#undef GetPlayerSkin
