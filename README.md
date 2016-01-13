@@ -59,17 +59,3 @@ public OnGameModeInit()
 	return 1;
 }
 ```
-#SAMP_FIXER_SINGLES ?
-Build 2 now supports normal arrays than PVars and SVars. By default the this feature is disabled.
-
-- What is advantage of using SINGLES?
-> `The speed of performing actions and reading data is increased.`
-
-- What is the disadvantage of not using SINGLES?
-> `You cannot access the data accross multiple platforms, you won't get the correct FIX value in other scripts.`
-
-- How to enable SINGLES?
-> Before including the library, add/define this macro:
-```pawn
-#define SAMP_FIXER_SINGLES
-```
