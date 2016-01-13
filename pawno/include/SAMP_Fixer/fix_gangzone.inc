@@ -23,7 +23,7 @@
 
 stock FIX_GangZoneCreate(Float:minx, Float:miny, Float:maxx, Float:maxy)
 {
-	return GangZoneCreate(floatsub(minx, floatfract(minx)), floatsub(miny, floatfract(miny)), floatsub(maxx, floatfract(maxx)), floatsub(maxy, floatfract(maxy))),
+	return GangZoneCreate(floatsub(minx, floatfract(minx)), floatsub(miny, floatfract(miny)), floatsub(maxx, floatfract(maxx)), floatsub(maxy, floatfract(maxy)));
 }
 #if defined _ALS_GangZoneCreate
 	#undef GangZoneCreate
