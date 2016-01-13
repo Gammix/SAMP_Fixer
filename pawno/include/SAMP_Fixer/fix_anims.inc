@@ -14,28 +14,12 @@
  *  LIST OF FIXES/ADDONS:
  * ================
  *
- * FIX:			ApplyAnimation
- * PROBLEM:  	Crashes when invalid library passed in. Rapid executions may cause a crash as well.
- * SOLUTION: 	Validity check for animlibs and last execution check to prevent crash.
- * CREDITS:		Gammix
- *
  * FIX:			Preload Anims
  * PROBLEM:  	Animations require to be preloaded once before applying.
  * SOLUTION: 	Preload the animation using a timer under ApplyAnimation (once).
  * CREDITS:		Gammix
  *
  */
-
-enum e_ANIM_DATA
-{
-	bool:   animLoaded,
-	        animLastExtecution,
-	        animLast[32]
-};
-
-static
-	t_PlayerAnim[MAX_PLAYERS][e_ANIM_DATA]
-;
 
 static const t_AnimLibs[][] =
 {
@@ -67,39 +51,16 @@ static const t_AnimLibs[][] =
     "VORTEX",       "WAYFARER",     "WEAPONS",      "WUZI"
 };
 
-public OnPlayerSpawn(playerid)
-{
-	if (! t_PlayerAnim[playerid][animLoaded])
-	{
-    	for (new i, j = sizeof(t_AnimLibs); i < j; i++)
-    	{
-        	ApplyAnimation(playerid, t_AnimLibs[i], "null", 4.0, 0, 0, 0, 0, 0, 1);
-    	}
-
-    	t_PlayerAnim[playerid][animLoaded] = true;
-	}
-
-    #if defined ANIM_OnPlayerSpawn
-      	return ANIM_OnPlayerSpawn(playerid);
-    #else
-      	return 1;
-    #endif
-}
-#if defined _ALS_OnPlayerSpawn
-  	#undef OnPlayerSpawn
-#else
-  	#define _ALS_OnPlayerSpawn
-#endif
-#define OnPlayerSpawn ANIM_OnPlayerSpawn
-#if defined ANIM_OnPlayerSpawn
-	forward ANIM_OnPlayerSpawn(playerid);
-#endif
+static
+	t_PlayerAnimTimer[MAX_PLAYERS][sizeof(t_AnimLibs)]
+;
 
 public OnPlayerConnect(playerid)
 {
-    t_PlayerAnim[playerid][animLoaded] = false;
-    t_PlayerAnim[playerid][animLastExtecution] = 0;
-    t_PlayerAnim[playerid][animLast][0] = EOS;
+	for (new i, j = sizeof(t_AnimLibs); i < j; i++)
+	{
+        t_PlayerAnimTimer[playerid][i] = 0;
+	}
 
     #if defined ANIM_OnPlayerConnect
       return ANIM_OnPlayerConnect(playerid);
@@ -124,21 +85,20 @@ stock FIX_AppliAnimation(playerid, animlib[], anim[], Float:vel = 4.1, bucle = 0
         return false;
     }
 
-    if (! strcmp(t_PlayerAnim[playerid][animLast], anim, true))
-    {
-    	if (t_PlayerAnim[playerid][animLastExecution] > gettime())
-   		{
-         	return false;
- 		}
-   	}
-
 	for (new i, j = sizeof(t_AnimLibs); i < j; i ++)
 	{
 		if (! strcmp(animlib, t_AnimLibs[i], true))
 	    {
-	    	ApplyAnimation(playerid, animlib, anim, vel, bucle, lockx, locky, freeze, time, sync);
-            format(t_PlayerAnim[playerid][animLast], 32, anim);
-            t_PlayerAnim[playerid][animLastExecution] = gettime() + 1;
+	        if (! t_PlayerAnimTimer[playerid][i])
+	        {
+         		ApplyAnimation(playerid, animlib, "null", 0.0, 0, 0, 0, 0, 0);
+         		
+        		t_PlayerAnimTimer[playerid][i] = SetTimerEx("OnPlayerAnimPreload", 250, false, "iissfiiiiii", i, playerid, animlib, anim, vel, bucle, lockx, locky, freeze, time, sync);
+	        }
+	        else
+	        {
+	    		ApplyAnimation(playerid, animlib, anim, vel, bucle, lockx, locky, freeze, time, sync);
+            }
 
 			return true;
 	    }
@@ -153,3 +113,17 @@ stock FIX_AppliAnimation(playerid, animlib[], anim[], Float:vel = 4.1, bucle = 0
   	#define _ALS_AppliAnimation
 #endif
 #define AppliAnimation FIX_AppliAnimation
+
+forward OnPlayerAnimPreload(i, playerid, animlib[], anim[], Float:vel, bucle, lockx, locky, freeze, time, sync);
+public  OnPlayerAnimPreload(i, playerid, animlib[], anim[], Float:vel, bucle, lockx, locky, freeze, time, sync)
+{
+    ApplyAnimation(playerid, animlib, anim, vel, bucle, lockx, locky, freeze, time, sync);
+    
+    CallRemoteFunction("OnPlayerAnimPreloaded", "ii", i, playerid);
+}
+
+forward OnPlayerAnimPreloaded(i, playerid);
+public  OnPlayerAnimPreloaded(i, playerid)
+{
+    t_PlayerAnimTimer[playerid][i] = 1;
+}
