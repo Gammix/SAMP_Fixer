@@ -56,7 +56,7 @@ stock static FIX_ReturnSafeString(string[])
 	new
         safetil = -5
 	;
-        
+
 	for (new i, j = strlen(string); i < j; ++i)
 	{
 	    switch (string[i])
@@ -82,7 +82,7 @@ stock static FIX_ReturnSafeString(string[])
 		            	safetil = i + 2;
 		        	}
 		        }
-		        
+
 		        continue;
 	        }
 			default:
@@ -101,7 +101,7 @@ stock static FIX_ReturnSafeString(string[])
 	        }
    		}
 	}
-	
+
 	return true;
 }
 
