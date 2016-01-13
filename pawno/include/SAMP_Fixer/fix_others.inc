@@ -1,221 +1,123 @@
-#if defined _fix_menu_included
+#if defined _fix_others_included
 	#endinput
 #endif
-#define _fix_menu_included
+#define _fix_others_included
 
 /*
  * ===============
  *  LIBRARY:
  * ===============
  *
- * fix_menu.inc
+ * fix_others.inc
  *
  * ================
  *  LIST OF FIXES:
  * ================
  *
- * FIX:   		Menu function crashes
- * PROBLEM:   	When an invalid menu is passes through any of the SA-MP file functions, the server crashes.
- * SOLUTION:  	Check if the menu is valid, if not return false.
+ * FIX:			KEY_AIM
+ * PROBLEM:  	By default this macro isn't defined.
+ * SOLUTION:  	Define it.
  * CREDITS:		Y_Less
+ *
+ * FIX:			SPECIAL_ACTION_PISSING
+ * PROBLEM:  	By default this macro isn't defined.
+ * SOLUTION: 	Define it.
+ * CREDITS:		xX_Simon_Xx
+ *
+ * FIX:			random
+ * PROBLEM:  	When passed negative numbers, this native doesn't work.
+ * SOLUTION: 	Multiply with "-" to get results.
+ * CREDITS:		xX_Simon_Xx
+ *
+ * FIX:			IsPlayerConnected
+ * PROBLEM:  	The native doesn't mask the numbers.
+ * SOLUTION:    Add an additional check.
+ * CREDITS:		Y_Less
+ *
+ * FIX:			Weapon crasher
+ * PROBLEM:  	Illegal weapons and bullets can crash server.
+ * SOLUTION:    Detect under OnPlayerWeaponShot and desync when invalid.
+ * CREDITS:		JernejL
  *
  */
 
-static
-	bool:t_IsValidMenu[MAX_MENUS],
- 	t_PlayerMenu[MAX_PLAYERS]
-;
+#if ! defined KEY_AIM
+	#define KEY_AIM (128)
+#endif
 
-stock Menu:FIX_CreateMenu(const title[], columns, Float:x, Float:y, Float:col1width, Float:col2width = 0.0)
+#if ! defined SPECIAL_ACTION_PISSING
+	#define SPECIAL_ACTION_PISSING (68)
+#endif
+
+public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
 {
-	new
-		Menu:ret = CreateMenu(title, columns, x, y, col1width, col2width)
-	;
-
-	if (Menu:0 <= ret < Menu:MAX_MENUS)
-	{
-		t_IsValidMenu[_:ret] = true;
+	if (weaponid < 22 || weaponid > 38)
+ 	{
+	 	return 0;
 	}
 
-	return ret;
-}
-#if defined _ALS_CreateMenu
-	#undef CreateMenu
-#else
-	native Menu:BAD_CreateMenu(const title[], columns, Float:x, Float:y, Float:col1width, Float:col2width = 0.0) = CreateMenu;
-	#define _ALS_CreateMenu
-#endif
-#define CreateMenu FIX_CreateMenu
+	new
+		Float:x,
+		Float:y,
+		Float:z
+	;
+    GetPlayerPos(playerid, x, y, z);
 
-stock FIX_IsValidMenu(Menu:menudid)
+	if (! (-20000.0 <= z <= 20000.0))
+ 	{
+	 	return 0;
+	}
+
+    #if defined EX_OnPlayerWeaponShot
+		return EX_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnPlayerWeaponShot
+   #undef OnPlayerWeaponShot
+#else
+    #define _ALS_OnPlayerWeaponShot
+#endif
+#define OnPlayerWeaponShot EX_OnPlayerWeaponShot
+#if defined EX_OnPlayerWeaponShot
+	forward EX_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
+#endif
+
+stock FIX_random(max)
 {
-    if (! (Menu:0 <= menuid < Menu:MAX_MENUS))
-    {
+	if (max < 0)
+	{
+		return -random(-max);
+	}
+	else
+	{
+		return random(max);
+	}
+}
+#if defined _ALS_random
+	#undef random
+#else
+	native BAD_random(max) = random;
+	#define _ALS_random
+#endif
+#define random FIX_random
+
+stock FIX_IsPlayerConnected(playerid)
+{
+	if (playerid & 0xFFFF0000)
+	{
 		return false;
 	}
-
-	return t_IsValidMenu[_:ret];
-}
-#if defined _ALS_IsValidMenu
-	#undef IsValidMenu
-#else
-	native Menu:BAD_IsValidMenu(Menu:menuid) = IsValidMenu;
-	#define _ALS_IsValidMenu
-#endif
-#define IsValidMenu FIX_IsValidMenu
-
-stock FIX_DestroyMenu(Menu:menuid)
-{
-	if (! FIX_IsValidMenu(menudid))
+ 	else
 	{
-	    return false;
-	}
-
-	new
-	    ret = DestroyMenu(menuid)
-	;
-	if (ret)
-	{
-	    t_IsValidMenu[_:menuid] = false;
-
-		for (new i, j = GetPlayerPoolSize(); i <= j; i++)
-		{
-		    if (t_PlayerMenu[playerid] == menuid)
-			{
-				if (HideMenuForPlayer(menuid, playerid))
-				{
-		    		t_PlayerMenu[playerid] = INVALID_MENU;
-				}
-			}
-		}
-	}
-
-	return ret;
-}
-#if defined _ALS_DestroyMenu
-	#undef DestroyMenu
-#else
-	native BAD_DestroyMenu(Menu:menuid) = DestroyMenu;
-	#define _ALS_DestroyMenu
-#endif
-#define DestroyMenu FIX_DestroyMenu
-
-stock FIX_AddMenuItem(Menu:menuid, column, const menutext[])
-{
-	if (! FIX_IsValidMenu(menudid))
-	{
-	    return false;
-	}
-	else return AddMenuItem(menuid, column, menutext);
-}
-#if defined _ALS_AddMenuItem
-	#undef AddMenuItem
-#else
-	native BAD_AddMenuItem(Menu:menuid, column, const menutext[]) = AddMenuItem;
-	#define _ALS_AddMenuItem
-#endif
-#define AddMenuItem FIX_AddMenuItem
-
-stock FIX_SetMenuColumnHeader(Menu:menuid, column, const columnheader[])
-{
-	if (! FIX_IsValidMenu(menudid))
-	{
-	    return false;
-	}
-	else return SetMenuColumnHeader(menuid, column, columnheader);
-}
-#if defined _ALS_SetMenuColumnHeader
-	#undef SetMenuColumnHeader
-#else
-	native BAD_SetMenuColumnHeader(Menu:menuid, column, const columnheader[]) = SetMenuColumnHeader;
-	#define _ALS_SetMenuColumnHeader
-#endif
-#define SetMenuColumnHeader FIX_SetMenuColumnHeader
-
-stock FIX_ShowMenuForPlayer(Menu:menuid, playerid)
-{
-	if (! FIX_IsValidMenu(menudid))
-	{
-	    return false;
-	}
-	else
-	{
-		t_PlayerMenu[playerid] = menuid;
-		return ShowMenuForPlayer(menuid, playerid);
+		return IsPlayerConnected(playerid);
 	}
 }
-#if defined _ALS_ShowMenuForPlayer
-	#undef ShowMenuForPlayer
+#if defined _ALS_IsPlayerConnected
+	#undef IsPlayerConnected
 #else
-	native BAD_ShowMenuForPlayer(Menu:menuid, playerid) = ShowMenuForPlayer;
-	#define _ALS_ShowMenuForPlayer
+	native BAD_IsPlayerConnected(playerid) = IsPlayerConnected;
+	#define _ALS_IsPlayerConnected
 #endif
-#define ShowMenuForPlayer FIX_ShowMenuForPlayer
-
-stock FIX_HideMenuForPlayer(Menu:menuid, playerid)
-{
-	if (! FIX_IsValidMenu(menudid))
-	{
-	    return false;
-	}
-	else
-	{
- 		t_PlayerMenu[playerid] = INVALID_MENU;
-		return HideMenuForPlayer(menuid, playerid);
-	}
-}
-#if defined _ALS_HideMenuForPlayer
-	#undef HideMenuForPlayer
-#else
-	native BAD_HideMenuForPlayer(Menu:menuid, playerid) = HideMenuForPlayer;
-	#define _ALS_HideMenuForPlayer
-#endif
-#define HideMenuForPlayer FIX_HideMenuForPlayer
-
-stock FIX_DisableMenu(Menu:menuid)
-{
-	if (! FIX_IsValidMenu(menudid))
-	{
-	    return false;
-	}
-	else return DisableMenu(menuid);
-}
-#if defined _ALS_DisableMenu
-	#undef DisableMenu
-#else
-	native BAD_DisableMenu(Menu:menuid) = DisableMenu;
-	#define _ALS_DisableMenu
-#endif
-#define DisableMenu FIX_DisableMenu
-
-stock FIX_DisableMenuRow(Menu:menuid, row)
-{
-	if (! FIX_IsValidMenu(menudid))
-	{
-	    return false;
-	}
-	else return DisableMenuRow(menuid, row);
-}
-#if defined _ALS_DisableMenuRow
-	#undef DisableMenuRow
-#else
-	native BAD_DisableMenuRow(Menu:menuid, row) = DisableMenuRow;
-	#define _ALS_DisableMenuRow
-#endif
-#define DisableMenuRow FIX_DisableMenuRow
-
-stock Menu:FIX_GetPlayerMenu(playerid)
-{
-	if (0 <= playerid < MAX_PLAYERS)
-	{
- 		return t_PlayerMenu[playerid];
-	}
-	else return Menu:INVALID_MENU;
-}
-#if defined _ALS_GetPlayerMenu
-	#undef GetPlayerMenu
-#else
-	native BAD_GetPlayerMenu(playerid) = GetPlayerMenu;
-	#define _ALS_GetPlayerMenu
-#endif
-#define GetPlayerMenu FIX_GetPlayerMenu
+#define IsPlayerConnected FIX_IsPlayerConnected
