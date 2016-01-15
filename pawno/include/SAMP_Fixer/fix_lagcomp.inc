@@ -71,7 +71,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 {
     if (t_PlayerTeam[playerid] == NO_TEAM || t_PlayerTeam[issuerid] == NO_TEAM || GetPlayerTeam(playerid) != GetPlayerTeam(issuerid))
     {
-        if (weaponid == WEAPON_KNIFE && amount > 1.0)
+        if (weaponid == WEAPON_KNIFE && _:amount == _:0.0)
         {
             SetPlayerHealth(playerid, 0.0);
         }
