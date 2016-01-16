@@ -25,6 +25,26 @@ static
     t_PlayerTeam[MAX_PLAYERS]
 ;
 
+public OnPlayerSpawn(playerid)
+{
+	t_PlayerTeam[playerid] = GetPlayerTeam(playerid);
+	
+	#if defined LC_OnPlayerSpawn
+        return LC_OnPlayerSpawn(playerid);
+    #else
+        return 1;
+    #endif
+}
+#if defined _ALS_OnPlayerSpawn
+    #undef OnPlayerSpawn
+#else
+    #define _ALS_OnPlayerSpawn
+#endif
+#define OnPlayerSpawn LC_OnPlayerSpawn
+#if defined LC_OnPlayerSpawn
+    forward LC_OnPlayerSpawn(playerid);
+#endif
+
 forward OnPlayerTeamSet(playerid, teamid);
 public 	OnPlayerTeamSet(playerid, teamid)
 {
@@ -108,5 +128,18 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
         }
     }
 
-	return 1;
+	#if defined LC_OnPlayerTakeDamage
+        return LC_OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart);
+    #else
+        return 1;
+    #endif
 }
+#if defined _ALS_OnPlayerTakeDamage
+    #undef OnPlayerTakeDamage
+#else
+    #define _ALS_OnPlayerTakeDamage
+#endif
+#define OnPlayerTakeDamage LC_OnPlayerTakeDamage
+#if defined LC_OnPlayerTakeDamage
+    forward LC_OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart);
+#endif
