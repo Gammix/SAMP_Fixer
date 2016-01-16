@@ -91,38 +91,41 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 {
     if (t_PlayerTeam[playerid] == NO_TEAM || t_PlayerTeam[issuerid] == NO_TEAM || GetPlayerTeam(playerid) != GetPlayerTeam(issuerid))
     {
-        if (weaponid == WEAPON_KNIFE && _:amount == _:0.0)
+        if (issuerid != INVALID_PLAYER_ID)
         {
-            SetPlayerHealth(playerid, 0.0);
-        }
-        else if (issuerid != INVALID_PLAYER_ID)
-        {
-            new Float:health;
-            GetPlayerHealth(playerid, health);
-
-            new Float:armour;
-            GetPlayerArmour(playerid, armour);
-
-            if (amount >= health + armour)
-		    {
-			    SetPlayerArmour(playerid, 0.0);
-		    	SetPlayerHealth(playerid, 0.0);
-		    }
-		    else
-		    {
-		        if (armour)
-				{
-				    new Float:loss = armour - amount;
-	   				SetPlayerArmour(playerid, armour - amount);
-
-					if (loss < 0.0)
+	        if (weaponid == WEAPON_KNIFE && _:amount == _:0.0)
+	        {
+	            SetPlayerHealth(playerid, 0.0);
+	        }
+	        else
+	        {
+	            new Float:health;
+	            GetPlayerHealth(playerid, health);
+	
+	            new Float:armour;
+	            GetPlayerArmour(playerid, armour);
+	
+	            if (amount >= health + armour)
+			    {
+				    SetPlayerArmour(playerid, 0.0);
+			    	SetPlayerHealth(playerid, 0.0);
+			    }
+			    else
+			    {
+			        if (armour)
 					{
-					    SetPlayerHealth(playerid, health + loss);
+					    new Float:loss = armour - amount;
+		   				SetPlayerArmour(playerid, armour - amount);
+	
+						if (loss < 0.0)
+						{
+						    SetPlayerHealth(playerid, health + loss);
+						}
 					}
-				}
-				else
-				{
-				    SetPlayerHealth(playerid, health - amount);
+					else
+					{
+					    SetPlayerHealth(playerid, health - amount);
+					}
 				}
 		    }
         }
