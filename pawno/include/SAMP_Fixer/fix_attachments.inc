@@ -45,18 +45,18 @@ enum e_ATTACHMENT_DATA
 };
 
 static
-	t_PlayerAttachments[MAX_PLAYER_ATTACHED_OBJECTS][e_ATTACHMENT_DATA]
+	t_PlayerAttachments[MAX_PLAYERS][MAX_PLAYER_ATTACHED_OBJECTS][e_ATTACHMENT_DATA]
 ;
 
 public OnPlayerDisconnect(playerid, reason)
 {
 	for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
 	{
-	    if (t_PlayerAttachments[i][att_used])
+	    if (t_PlayerAttachments[playerid][i][att_used])
 	    {
 			RemovePlayerAttachedObject(playerid, i);
 
-			t_PlayerAttachments[i][att_used] = false;
+			t_PlayerAttachments[playerid][i][att_used] = false;
 		}
 	}
 
@@ -98,7 +98,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			{
 			    for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
 				{
-					if (IsPlayerAttachedObjectSlotUsed(playerid, i) && t_PlayerAttachments[i][att_used])
+					if (IsPlayerAttachedObjectSlotUsed(playerid, i))
 				    {
 						RemovePlayerAttachedObject(playerid, i);
 	     			}
@@ -110,13 +110,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	{
 	    for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
 		{
-			if (! IsPlayerAttachedObjectSlotUsed(playerid, i) && t_PlayerAttachments[i][att_used])
+			if (! IsPlayerAttachedObjectSlotUsed(playerid, i) && t_PlayerAttachments[playerid][i][att_used])
 		    {
-				SetPlayerAttachedObject(playerid, i, t_PlayerAttachments[i][att_modelid], t_PlayerAttachments[i][att_boneid],
-													 t_PlayerAttachments[i][att_offsetX], t_PlayerAttachments[i][att_offsetY], t_PlayerAttachments[i][att_offsetZ],
-													 t_PlayerAttachments[i][att_rotX], t_PlayerAttachments[i][att_rotY], t_PlayerAttachments[i][att_rotZ],
-													 t_PlayerAttachments[i][att_scaleX], t_PlayerAttachments[i][att_scaleY], t_PlayerAttachments[i][att_scaleZ],
-													 t_PlayerAttachments[i][att_color1], t_PlayerAttachments[i][att_color2]
+				SetPlayerAttachedObject(playerid, i, t_PlayerAttachments[playerid][i][att_modelid], t_PlayerAttachments[playerid][i][att_boneid],
+													 t_PlayerAttachments[playerid][i][att_offsetX], t_PlayerAttachments[playerid][i][att_offsetY], t_PlayerAttachments[playerid][i][att_offsetZ],
+													 t_PlayerAttachments[playerid][i][att_rotX], t_PlayerAttachments[playerid][i][att_rotY], t_PlayerAttachments[playerid][i][att_rotZ],
+													 t_PlayerAttachments[playerid][i][att_scaleX], t_PlayerAttachments[playerid][i][att_scaleY], t_PlayerAttachments[playerid][i][att_scaleZ],
+													 t_PlayerAttachments[playerid][i][att_color1], t_PlayerAttachments[playerid][i][att_color2]
 			 							);
 			}
 		}
@@ -146,26 +146,26 @@ stock ATT_SetPlayerAttachedObject(playerid, index, modelid, bone, Float:fOffsetX
 {
 	if (SetPlayerAttachedObject(playerid, index, modelid, bone, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ, materialcolor1, materialcolor2))
 	{
-		t_PlayerAttachments[index][att_modelid] = modelid;
+		t_PlayerAttachments[playerid][index][att_modelid] = modelid;
 
-		t_PlayerAttachments[index][att_boneid] = bone;
+		t_PlayerAttachments[playerid][index][att_boneid] = bone;
 
-		t_PlayerAttachments[index][att_offsetX] = fOffsetX;
-		t_PlayerAttachments[index][att_offsetY] = fOffsetY;
-		t_PlayerAttachments[index][att_offsetZ] = fOffsetZ;
+		t_PlayerAttachments[playerid][index][att_offsetX] = fOffsetX;
+		t_PlayerAttachments[playerid][index][att_offsetY] = fOffsetY;
+		t_PlayerAttachments[playerid][index][att_offsetZ] = fOffsetZ;
 
-		t_PlayerAttachments[index][att_rotX] = fRotX;
-		t_PlayerAttachments[index][att_rotY] = fRotY;
-		t_PlayerAttachments[index][att_rotZ] = fRotZ;
+		t_PlayerAttachments[playerid][index][att_rotX] = fRotX;
+		t_PlayerAttachments[playerid][index][att_rotY] = fRotY;
+		t_PlayerAttachments[playerid][index][att_rotZ] = fRotZ;
 
-		t_PlayerAttachments[index][att_scaleX] = fScaleX;
-		t_PlayerAttachments[index][att_scaleY] = fScaleY;
-		t_PlayerAttachments[index][att_scaleZ] = fScaleZ;
+		t_PlayerAttachments[playerid][index][att_scaleX] = fScaleX;
+		t_PlayerAttachments[playerid][index][att_scaleY] = fScaleY;
+		t_PlayerAttachments[playerid][index][att_scaleZ] = fScaleZ;
 
-		t_PlayerAttachments[index][att_color1] = materialcolor1;
-		t_PlayerAttachments[index][att_color2] = materialcolor2;
+		t_PlayerAttachments[playerid][index][att_color1] = materialcolor1;
+		t_PlayerAttachments[playerid][index][att_color2] = materialcolor2;
 
-		t_PlayerAttachments[index][att_used] = true;
+		t_PlayerAttachments[playerid][index][att_used] = true;
 		
 		return true;
 	}
@@ -186,7 +186,7 @@ stock ATT_RemovePlayerAttachedObject(playerid, index)
 {
 	if (RemovePlayerAttachedObject(playerid, index))
 	{
-		t_PlayerAttachments[index][att_used] = false;
+		t_PlayerAttachments[playerid][index][att_used] = false;
 
 		return true;
 	}
