@@ -65,6 +65,53 @@ stock FIX_Kick(playerid, delay = 150)
 #endif
 #define Kick FIX_Kick
 
+stock FIX_Ban(playerid, delay = 150)
+{
+	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
+	{
+		return false;
+	}
+
+	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, t_DelayKB[playerid][kbTimer]);
+	
+	t_DelayKB[playerid][kbType] = 1;
+	t_DelayKB[playerid][kbReason][0] = EOS;
+
+	return true;
+}
+#if defined _ALS_Ban
+	#undef Ban
+#else
+	native BAD_Ban(playerid) = Ban;
+	#define _ALS_Ban
+#endif
+#define Ban FIX_Ban
+
+stock FIX_BanEx(playerid, const reason[], delay = 150)
+{
+	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
+	{
+		return false;
+	}
+
+	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, t_DelayKB[playerid][kbTimer]);
+	
+	t_DelayKB[playerid][kbType] = 2;
+	t_DelayKB[playerid][kbReason][0] = EOS;
+	strcat(t_DelayKB[playerid][kbReason], reason);
+
+	return true;
+}
+#if defined _ALS_BanEx
+	#undef BanEx
+#else
+	native BAD_BanEx(playerid, const reason[]) = BanEx;
+	#define _ALS_BanEx
+#endif
+#define BanEx FIX_BanEx
+
 forward OnPlayerDelayKicked(playerid);
 public	OnPlayerDelayKicked(playerid)
 {
@@ -92,49 +139,6 @@ public  OnPlayerDelayKickProcessed(playerid, i)
 {
     t_DelayKB[playerid][kbTimer] = i;
 }
-
-stock FIX_Ban(playerid, delay = 150)
-{
-	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
-	{
-		return false;
-	}
-
-	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
-	t_DelayKB[playerid][kbType] = 1;
-	t_DelayKB[playerid][kbReason][0] = EOS;
-
-	return true;
-}
-#if defined _ALS_Ban
-	#undef Ban
-#else
-	native BAD_Ban(playerid) = Ban;
-	#define _ALS_Ban
-#endif
-#define Ban FIX_Ban
-
-stock FIX_BanEx(playerid, const reason[], delay = 150)
-{
-	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
-	{
-		return false;
-	}
-
-	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
-	t_DelayKB[playerid][kbType] = 2;
-	t_DelayKB[playerid][kbReason][0] = EOS;
-	strcat(t_DelayKB[playerid][kbReason], reason);
-
-	return true;
-}
-#if defined _ALS_BanEx
-	#undef BanEx
-#else
-	native BAD_BanEx(playerid, const reason[]) = BanEx;
-	#define _ALS_BanEx
-#endif
-#define BanEx FIX_BanEx
 
 public OnPlayerConnect(playerid)
 {
