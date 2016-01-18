@@ -22,13 +22,17 @@
  */
 
 static
-    t_PlayerTeam[MAX_PLAYERS]
+    t_PlayerTeam[MAX_PLAYERS],
+    t_PlayerDeathInfo[MAX_PLAYERS][2]
 ;
 
 public OnPlayerSpawn(playerid)
 {
 	t_PlayerTeam[playerid] = GetPlayerTeam(playerid);
 	
+	t_PlayerDeathInfo[playerid][0] = INVALID_PLAYER_ID;
+	t_PlayerDeathInfo[playerid][1] = -1;
+
 	#if defined LC_OnPlayerSpawn
         return LC_OnPlayerSpawn(playerid);
     #else
@@ -87,6 +91,33 @@ stock LC_GetPlayerTeam(playerid)
 #endif
 #define GetPlayerTeam LC_GetPlayerTeam
 
+public OnPlayerDeath(playerid, killerid, reason)
+{
+	if (t_PlayerDeathInfo[playerid][0] != INVALID_PLAYER_ID)
+	{
+	    killerid = t_PlayerDeathInfo[playerid][0];
+	    reason = t_PlayerDeathInfo[playerid][1];
+
+	    t_PlayerDeathInfo[playerid][0] = INVALID_PLAYER_ID;
+	    t_PlayerDeathInfo[playerid][1] = -1;
+	}
+	
+	#if defined SS_OnPlayerDeath
+		return SS_OnPlayerDeath(playerid, killerid, reason);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnPlayerDeath
+    #undef OnPlayerDeath
+#else
+    #define _ALS_OnPlayerDeath
+#endif
+#define OnPlayerDeath SS_OnPlayerDeath
+#if defined SS_OnPlayerDeath
+	forward SS_OnPlayerDeath(playerid, killerid, reason);
+#endif
+
 public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 {
     if (t_PlayerTeam[playerid] == NO_TEAM || t_PlayerTeam[issuerid] == NO_TEAM || GetPlayerTeam(playerid) != GetPlayerTeam(issuerid))
@@ -96,19 +127,25 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 	        if (weaponid == WEAPON_KNIFE && _:amount == _:0.0)
 	        {
 	            SetPlayerHealth(playerid, 0.0);
+
+				t_PlayerDeathInfo[playerid][0] = issuerid;
+				t_PlayerDeathInfo[playerid][1] = WEAPON_KNIFE;
 	        }
 	        else
 	        {
 	            new Float:health;
 	            GetPlayerHealth(playerid, health);
-	
+
 	            new Float:armour;
 	            GetPlayerArmour(playerid, armour);
-	
+
 	            if (amount >= health + armour)
 			    {
 				    SetPlayerArmour(playerid, 0.0);
 			    	SetPlayerHealth(playerid, 0.0);
+
+					t_PlayerDeathInfo[playerid][0] = issuerid;
+					t_PlayerDeathInfo[playerid][1] = weaponid;
 			    }
 			    else
 			    {
@@ -116,7 +153,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 					{
 					    new Float:loss = armour - amount;
 		   				SetPlayerArmour(playerid, armour - amount);
-	
+
 						if (loss < 0.0)
 						{
 						    SetPlayerHealth(playerid, health + loss);
