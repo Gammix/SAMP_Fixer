@@ -44,14 +44,13 @@ static
 
 stock FIX_Kick(playerid, delay = 150)
 {
-	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
+	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer])
 	{
 		return false;
 	}
 
-	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
-	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, t_DelayKB[playerid][kbTimer]);
-	
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid));
+
 	t_DelayKB[playerid][kbType] = 0;
 	t_DelayKB[playerid][kbReason][0] = EOS;
 
@@ -67,14 +66,13 @@ stock FIX_Kick(playerid, delay = 150)
 
 stock FIX_Ban(playerid, delay = 150)
 {
-	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
+	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer])
 	{
 		return false;
 	}
 
-	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
-	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, t_DelayKB[playerid][kbTimer]);
-	
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid));
+
 	t_DelayKB[playerid][kbType] = 1;
 	t_DelayKB[playerid][kbReason][0] = EOS;
 
@@ -90,14 +88,13 @@ stock FIX_Ban(playerid, delay = 150)
 
 stock FIX_BanEx(playerid, const reason[], delay = 150)
 {
-	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer] != -1)
+	if (! IsPlayerConnected(playerid) || t_DelayKB[playerid][kbTimer])
 	{
 		return false;
 	}
 
-	t_DelayKB[playerid][kbTimer] = SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid);
-	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, t_DelayKB[playerid][kbTimer]);
-	
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, SetTimerEx("OnPlayerDelayKicked", delay, false, "i", playerid));
+
 	t_DelayKB[playerid][kbType] = 2;
 	t_DelayKB[playerid][kbReason][0] = EOS;
 	strcat(t_DelayKB[playerid][kbReason], reason);
@@ -115,21 +112,21 @@ stock FIX_BanEx(playerid, const reason[], delay = 150)
 forward OnPlayerDelayKicked(playerid);
 public	OnPlayerDelayKicked(playerid)
 {
-	t_DelayKB[playerid][kbTimer] = -1;
-
+	CallRemoteFunction("OnPlayerDelayKickProcessed", "ii", playerid, 0);
+	
 	switch (t_DelayKB[playerid][kbType])
 	{
 		case 0:
 		{
-			Kick(playerid);
+			BAD_Kick(playerid);
 		}
 		case 1:
 		{
-			Ban(playerid);
+			BAD_Ban(playerid);
 		}
 		case 2:
 		{
-			BanEx(playerid, t_DelayKB[playerid][kbReason]);
+			BAD_BanEx(playerid, t_DelayKB[playerid][kbReason]);
 		}
 	}
 }
@@ -142,7 +139,7 @@ public  OnPlayerDelayKickProcessed(playerid, i)
 
 public OnPlayerConnect(playerid)
 {
-	t_DelayKB[playerid][kbTimer] = -1;
+	t_DelayKB[playerid][kbTimer] = 0;
 
 	#if defined KB_OnPlayerConnect
 		return KB_OnPlayerConnect(playerid);
@@ -163,10 +160,10 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerDisconnect(playerid, reason)
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		KillTimer(t_DelayKB[playerid][kbTimer]);
-		t_DelayKB[playerid][kbTimer] = -1;
+		t_DelayKB[playerid][kbTimer] = 0;
 
 		OnPlayerDelayKicked(playerid);
 	}
@@ -189,7 +186,7 @@ forward KB_OnPlayerDisconnect(playerid, reason);
 
 public OnPlayerUpdate(playerid)
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
@@ -212,7 +209,7 @@ public OnPlayerUpdate(playerid)
 
 public OnPlayerCommandText(playerid, cmdtext[])
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
@@ -235,7 +232,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 
 public OnPlayerText(playerid, text[])
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
@@ -258,7 +255,7 @@ public OnPlayerText(playerid, text[])
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
@@ -281,7 +278,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
@@ -304,7 +301,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 
 public OnVehicleMod(playerid, vehicleid, componentid)
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
@@ -327,7 +324,7 @@ public OnVehicleMod(playerid, vehicleid, componentid)
 
 public OnVehicleRespray(playerid, vehicleid, color1, color2)
 {
-	if (t_DelayKB[playerid][kbTimer] != -1)
+	if (t_DelayKB[playerid][kbTimer])
 	{
 		return 0;
 	}
