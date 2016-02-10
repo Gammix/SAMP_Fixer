@@ -3,7 +3,7 @@
  * 	INTRODUCTION
  * ============
  *
- * SAMP Fixer v1.0 - (c) 2015
+ * SAMP Fixer - Build: 5 - (c) 2015-16
  * Community patch for buggy SA:MP functions.
  *
  *
