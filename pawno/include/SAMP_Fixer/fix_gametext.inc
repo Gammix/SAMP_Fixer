@@ -96,12 +96,9 @@ stock FIX_GameTextForPlayer(playerid, string[], time, style, color = -1)
 
 stock FIX_GameTextForAll(string[], time, style, color = -1)
 {
-	for (new i, j = GetPlayerPoolSize(); i <= j; i++)
+	for (new i = GetPlayerPoolSize(); i != -1; --i)
 	{
-		if (IsPlayerConnected(i))
-		{
-		    FIX_GameTextForPlayer(i, string, time, style, color);
-		}
+		FIX_GameTextForPlayer(i, string, time, style, color);
 	}
 
 	return true;
@@ -174,7 +171,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][0][gametextTD], t_GameTextDefaultColor[0]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][0][gametextTD], 2);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][0][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][0][gametextTD], 0);
 
 		t_GameText[playerid][1][gametextTD] = CreatePlayerTextDraw(playerid, 620.000000, 310.000000, "_");
 		PlayerTextDrawAlignment(playerid, t_GameText[playerid][1][gametextTD], 3);
@@ -184,7 +180,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][1][gametextTD], t_GameTextDefaultColor[1]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][1][gametextTD], 2);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][1][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][1][gametextTD], 0);
 
 		t_GameText[playerid][2][gametextTD] = CreatePlayerTextDraw(playerid, 320.000000, 156.000000, "_");
 		PlayerTextDrawAlignment(playerid, t_GameText[playerid][2][gametextTD], 2);
@@ -194,7 +189,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][2][gametextTD], t_GameTextDefaultColor[2]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][2][gametextTD], 3);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][2][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][2][gametextTD], 0);
 
 		t_GameText[playerid][3][gametextTD] = CreatePlayerTextDraw(playerid, 320.000000, 154.000000, "_");
 		PlayerTextDrawAlignment(playerid, t_GameText[playerid][3][gametextTD], 2);
@@ -204,7 +198,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][3][gametextTD], t_GameTextDefaultColor[3]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][3][gametextTD], 2);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][3][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][3][gametextTD], 0);
 
 		t_GameText[playerid][4][gametextTD] = CreatePlayerTextDraw(playerid, 320.000000, 115.000000, "_");
 		PlayerTextDrawAlignment(playerid, t_GameText[playerid][4][gametextTD], 2);
@@ -214,7 +207,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][4][gametextTD], t_GameTextDefaultColor[4]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][4][gametextTD], 2);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][4][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][4][gametextTD], 0);
 
 		t_GameText[playerid][5][gametextTD] = CreatePlayerTextDraw(playerid, 320.000000, 217.000000, "_");
 		PlayerTextDrawAlignment(playerid, t_GameText[playerid][5][gametextTD], 2);
@@ -224,7 +216,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][5][gametextTD], t_GameTextDefaultColor[5]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][5][gametextTD], 2);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][5][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][5][gametextTD], 0);
 
 		t_GameText[playerid][6][gametextTD] = CreatePlayerTextDraw(playerid, 320.000000, 60.000000, "_");
 		PlayerTextDrawAlignment(playerid, t_GameText[playerid][6][gametextTD], 2);
@@ -234,7 +225,6 @@ public OnPlayerConnect(playerid)
 		PlayerTextDrawColor(playerid, t_GameText[playerid][6][gametextTD], t_GameTextDefaultColor[6]);
 		PlayerTextDrawSetOutline(playerid, t_GameText[playerid][6][gametextTD], 2);
 		PlayerTextDrawSetProportional(playerid, t_GameText[playerid][6][gametextTD], 1);
-		PlayerTextDrawSetSelectable(playerid, t_GameText[playerid][6][gametextTD], 0);
 	}
 	
 	#if defined GT_OnPlayerConnect
@@ -260,7 +250,7 @@ public OnPlayerDisconnect(playerid, reason)
 	    DeletePVar(playerid, "GT_Update");
 	    t_GTUpdate[playerid] = false;
 	
-		for(new i; i < GAMETEXT_MAX_STYLES; i++)
+		for(new i = GAMETEXT_MAX_STYLES - 1; i != -1; --i)
 		{
 			t_GameText[playerid][i][gametextTD] = PlayerText:INVALID_TEXT_DRAW;
 			if (t_GameText[playerid][i][gametextTimer] != -1)
