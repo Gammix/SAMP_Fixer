@@ -722,11 +722,12 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 	{
 	    if (hittype == BULLET_HIT_TYPE_VEHICLE)
 	    {
-		    if (GetPlayerTeam(playerid) != NO_TEAM)
+		    new ret_team = GetPlayerTeam(playerid);
+		    if (ret_team != NO_TEAM)
 		    {
-		        for (new i, j = GetPlayerPoolSize(); i <= j; i++)
+		        for (new i = GetPlayerPoolSize(); i != -1; --i)
 		        {
-		            if (GetPlayerVehicleID(i) == hitid && GetPlayerTeam(playerid) == GetPlayerTeam(i))
+		            if (GetPlayerVehicleID(i) == hitid && ret_team == GetPlayerTeam(i))
 					{
 						return 0;
 		            }
