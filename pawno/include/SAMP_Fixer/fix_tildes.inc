@@ -57,7 +57,7 @@ stock static FIX_ReturnSafeString(string[])
         safetil = -5
 	;
 
-	for (new i, j = strlen(string); i < j; ++i)
+	for (new i; string[i] != '\0'; ++i)
 	{
 	    switch (string[i])
 		{
