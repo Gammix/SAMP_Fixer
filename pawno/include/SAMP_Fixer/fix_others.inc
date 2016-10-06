@@ -51,7 +51,7 @@
 
 public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
 {
-	if (weaponid < 22 || weaponid > 38)
+	if (!(22 <= weaponid <= 34) && weaponid != 38)
  	{
 	 	return 0;
 	}
