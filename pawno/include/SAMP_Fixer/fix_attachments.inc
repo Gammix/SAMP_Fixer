@@ -50,7 +50,7 @@ static
 
 public OnPlayerDisconnect(playerid, reason)
 {
-	for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
+	for (new i = MAX_PLAYER_ATTACHED_OBJECTS - 1; i != -1; --i)
 	{
 	    if (t_PlayerAttachments[playerid][i][att_used])
 	    {
@@ -96,7 +96,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			case WEAPON_SNIPER, WEAPON_ROCKETLAUNCHER, WEAPON_HEATSEEKER, WEAPON_CAMERA:
 			{
-			    for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
+			    for (new i = MAX_PLAYER_ATTACHED_OBJECTS - 1; i != -1; --i)
 				{
 					if (IsPlayerAttachedObjectSlotUsed(playerid, i))
 				    {
@@ -108,7 +108,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 	else if(RELEASED(KEY_AIM))
 	{
-	    for (new i; i < MAX_PLAYER_ATTACHED_OBJECTS; i++)
+	    for (new i = MAX_PLAYER_ATTACHED_OBJECTS - 1; i != -1; --i)
 		{
 			if (! IsPlayerAttachedObjectSlotUsed(playerid, i) && t_PlayerAttachments[playerid][i][att_used])
 		    {
