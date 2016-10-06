@@ -211,7 +211,7 @@ public OnPlayerCommandText(playerid, cmdtext[])
 {
 	if (t_DelayKB[playerid][kbTimer])
 	{
-		return 0;
+		return 1;
 	}
 
 	#if defined KB_OnPlayerCommandText
