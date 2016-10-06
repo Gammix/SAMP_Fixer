@@ -57,7 +57,7 @@ static
 
 public OnPlayerConnect(playerid)
 {
-	for (new i, j = sizeof(t_AnimLibs); i < j; i++)
+	for (new i = sizeof(t_AnimLibs) - 1; i != -1; --i)
 	{
         t_PlayerAnimTimer[playerid][i] = 0;
 	}
@@ -85,7 +85,7 @@ stock FIX_AppliAnimation(playerid, animlib[], anim[], Float:vel = 4.1, bucle = 0
         return false;
     }
 
-	for (new i, j = sizeof(t_AnimLibs); i < j; i ++)
+	for (new i = sizeof(t_AnimLibs) - 1; i != -1; --i)
 	{
 		if (! strcmp(animlib, t_AnimLibs[i], true))
 	    {
